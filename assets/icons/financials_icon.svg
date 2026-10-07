@@ -1,0 +1,12 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- خلفية دائرية -->
+    <circle cx="30" cy="30" r="28" fill="#E3DAFA"/>
+    <!-- كومة العملات النقدية -->
+    <ellipse cx="26" cy="20" rx="10" ry="4" fill="#8C62EC"/>
+    <path d="M16 20V25C16 27.2 20.5 29 26 29C31.5 29 36 27.2 36 25V20" stroke="#5A2EC0" stroke-width="2.5" fill="none"/>
+    <path d="M16 25V30C16 32.2 20.5 34 26 34C31.5 34 36 32.2 36 30V25" stroke="#5A2EC0" stroke-width="2.5" fill="none"/>
+    <path d="M16 30V35C16 37.2 20.5 39 26 39C31.5 39 36 37.2 36 35V30" stroke="#5A2EC0" stroke-width="2.5" fill="none"/>
+    <!-- شارة الدولار -->
+    <circle cx="39" cy="36" r="9" fill="#5A2EC0"/>
+    <text x="39" y="40" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">$</text>
+</svg>

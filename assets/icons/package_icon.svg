@@ -1,0 +1,11 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Soft Circle Background -->
+    <circle cx="24" cy="24" r="22" fill="#FFE8D6"/>
+    <!-- Isometric Box -->
+    <path d="M24 12L34 17V27L24 32L14 27V17L24 12Z" fill="#E06328" opacity="0.9"/>
+    <path d="M24 12L34 17L24 22L14 17L24 12Z" fill="#F48C51"/>
+    <path d="M24 22V32L14 27V17L24 22Z" fill="#D05217"/>
+    <!-- Arrow Circle Badge -->
+    <circle cx="31" cy="29" r="6" fill="#E06328"/>
+    <path d="M29 29H33M31 27L33 29L31 31" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- خلفية دائرية -->
+    <circle cx="30" cy="30" r="28" fill="#D0E2F7"/>
+    <!-- الكاب العسكري -->
+    <path d="M22 20L30 16L38 20L35 22.5H25L22 20Z" fill="#183B6B"/>
+    <polygon points="30,17.5 31.2,20 28.8,20" fill="#FFD700"/>
+    <!-- الرأس والكتفين -->
+    <circle cx="30" cy="26" r="5" fill="#183B6B"/>
+    <path d="M20 39C20 33.5 24.5 31.5 30 31.5C35.5 31.5 40 33.5 40 39V40H20V39Z" fill="#183B6B"/>
+    <!-- شارة الإضافة (+) -->
+    <circle cx="39" cy="37" r="8" fill="#183B6B"/>
+    <path d="M39 33V41M35 37H43" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
