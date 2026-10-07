@@ -24,9 +24,9 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 20.h),
           Expanded(
             child: GridView(
-              padding: EdgeInsets.symmetric(horizontal:  20.w),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 59/85,
+                childAspectRatio: 59 / 85,
                 crossAxisCount: 2,
               ),
               children: [
@@ -40,7 +40,8 @@ class HomeScreen extends StatelessWidget {
                   title: 'إضافة فاتورة',
                   subtitle: 'إدخال وتسجيل الفواتير بكل سهولة',
                   iconColor: AppColors.invoiceAccent,
-                ).slideInRight(), DashboardCard(
+                ).slideInRight(),
+                DashboardCard(
                   heroTag: HeroTags.addNewOfficer.value,
                   onTap: () {
                     Navigator.pushNamed(context, AppRoutes.addNewOfficer);
@@ -50,17 +51,19 @@ class HomeScreen extends StatelessWidget {
                   title: 'إضافة ضباط جدد',
                   subtitle: 'تسجيل وإضافة ضباط جدد في النظام',
                   iconColor: AppColors.primary,
-                ).slideInLeft(), DashboardCard(
+                ).slideInLeft(),
+                DashboardCard(
                   heroTag: HeroTags.financials.value,
                   onTap: () {
-                    //todo go to financials
+                    Navigator.pushNamed(context, AppRoutes.financials);
                   },
                   iconPath: 'assets/icons/financials_icon.svg',
                   backgroundColor: AppColors.financialsIconBg,
                   title: 'ماليات',
                   subtitle: 'متابعة و إدارة الأمور المالية',
                   iconColor: AppColors.financialsIconAccent,
-                ).slideInRight(), DashboardCard(
+                ).slideInRight(),
+                DashboardCard(
                   heroTag: HeroTags.disburse.value,
                   onTap: () {
                     //todo go to disburse

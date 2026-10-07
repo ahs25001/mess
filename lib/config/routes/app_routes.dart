@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/add_new_invoice/presentation/pages/add_new_invoice_screen.dart';
 import '../../features/adding_officers/presentation/pages/add_new_officer_screen.dart';
+import '../../features/financials/presntation/pages/financials_screen.dart';
 import '../../features/home/presntation/pages/home_screen.dart';
 
 class AppRoutes {
@@ -24,6 +25,8 @@ class Routes {
         );
       case AppRoutes.addNewOfficer:
         return MaterialPageRoute(builder:  (context) => const AddNewOfficerScreen(),);
+        case AppRoutes.financials:
+        return MaterialPageRoute(builder:  (context) => const FinancialsScreen(),);
         default:
         return MaterialPageRoute(
           builder: (context) => const ErrorScreen(),
