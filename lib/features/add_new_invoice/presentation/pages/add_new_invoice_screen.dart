@@ -7,7 +7,7 @@ import 'package:mess_app/core/models/food_model.dart';
 import 'package:mess_app/core/utils/app_colors.dart';
 import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/features/add_new_invoice/presentation/cubit/add_new_invoice_cubit.dart';
-import 'package:mess_app/features/add_new_invoice/presentation/widget/add_invoice_heder.dart';
+import 'package:mess_app/core/widgets/custom_app_bar.dart';
 import 'package:mess_app/features/add_new_invoice/presentation/widget/add_new_food_bottom_sheet.dart';
 
 class AddNewInvoiceScreen extends StatelessWidget {
@@ -24,7 +24,7 @@ class AddNewInvoiceScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AddInvoiceHeder(title: 'فاتورة جديدة'),
+                const CustomAppBar(title: 'فاتورة جديدة'),
                 SizedBox(height: 10.h),
                 Expanded(
                   child: SingleChildScrollView(

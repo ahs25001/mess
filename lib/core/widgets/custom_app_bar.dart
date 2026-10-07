@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/utils/app_colors.dart';
+import '../utils/app_colors.dart';
 
-class AddInvoiceHeder extends StatelessWidget {
+class CustomAppBar extends StatelessWidget {
   final String title;
-  const AddInvoiceHeder({super.key, required this.title});
+  const CustomAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

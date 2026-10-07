@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                 ).slideInRight(), DashboardCard(
                   heroTag: HeroTags.addNewOfficer.value,
                   onTap: () {
-                    //todo add
+                    Navigator.pushNamed(context, AppRoutes.addNewOfficer);
                   },
                   iconPath: 'assets/icons/add_officers_icon.svg',
                   backgroundColor: AppColors.softBlue,
