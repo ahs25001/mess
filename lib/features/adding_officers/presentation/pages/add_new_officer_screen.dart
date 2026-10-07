@@ -185,6 +185,18 @@ class AddNewOfficerScreen extends StatelessWidget {
                                 label: "رقم التليفون",
                                 textInputAction: TextInputAction.done,
                               ),
+                              FilledButton(onPressed: (){
+                                if(context.read<AddNewOfficerCubit>().formKey.currentState!.validate()){
+                                  context.read<AddNewOfficerCubit>().addOfficer();
+                                }
+                              },
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    minimumSize: Size(double.infinity, 40.h),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                  ), child: Text("إضافة الضابط",style: TextStyle(color: AppColors.white,fontWeight: FontWeight.bold,fontSize: 16.sp),))
                             ],
                           ),
                         ),
