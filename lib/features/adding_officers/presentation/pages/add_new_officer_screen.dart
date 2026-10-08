@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,10 +32,7 @@ class AddNewOfficerScreen extends StatelessWidget {
                 ),
               );
             } else if (state.status == AddNewOfficerStateStatus.failure) {
-              Navigator.of(
-                context,
-                rootNavigator: true,
-              ).pop(); // Dismiss loading dialog
+              Navigator.pop(context); // Dismiss loading dialog
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: AppColors.red,

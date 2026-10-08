@@ -1,19 +1,53 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:mess_app/core/utils/app_constants.dart';
+import 'package:mess_app/features/home/presntation/cubit/home_cubit.dart';
 
-import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_enums.dart';
 import '../widgets/curved_header.dart';
-import '../widgets/dashboard_card.dart';
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+  create: (context) => HomeCubit(),
+  child: BlocBuilder<HomeCubit, HomeState>(
+  builder: (context, state) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+          elevation: 0,
+          backgroundColor: AppColors.softBlue.withOpacity(0.5),
+        currentIndex:state.currentIndex??0 ,
+        onTap: (value) {
+          context.read<HomeCubit>().changePage(value);
+        },
+        unselectedFontSize: 14.sp,
+        selectedItemColor: AppColors.primary,
+          unselectedItemColor: AppColors.black.withOpacity(0.5),
+          selectedLabelStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14.sp
+          ),
+          items: [
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset("assets/icons/home-svgrepo-com.svg",color: AppColors.black,width: 30.w,height: 30.h,),
+          activeIcon: SvgPicture.asset('assets/icons/home_svgrepo-com_filled.svg',color: AppColors.primary,width: 30.w,height: 30.h),
+          label: 'الرئيسية',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset("assets/icons/archive-svgrepo-com.svg",color: AppColors.black,width: 30.w,height: 30.h),
+          activeIcon: SvgPicture.asset('assets/icons/archive-svgrepo-com_filled.svg',color: AppColors.primary,width: 30.w,height: 30.h),
+          label: 'السجلات',
+        ),BottomNavigationBarItem(
+          icon: SvgPicture.asset("assets/icons/settings-minimalistic-svgrepo-com.svg",color: AppColors.black,width: 30.w,height: 30.h),
+          activeIcon: SvgPicture.asset('assets/icons/settings-minimalistic-svgrepo-com_filled.svg',color: AppColors.primary,width: 30.w,height: 30.h),
+          label: 'الاعدادات',
+        ),
+      ]),
       body: Column(
         children: [
           const CurvedHeader(
@@ -21,61 +55,17 @@ class HomeScreen extends StatelessWidget {
             subtitle: 'في نظام إدارة الميس',
             description: 'اختر ما تريد القيام به من الخيارات التالية',
           ),
-          SizedBox(height: 20.h),
           Expanded(
-            child: GridView(
-              padding: EdgeInsets.symmetric(horizontal:  20.w),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 59/85,
-                crossAxisCount: 2,
-              ),
-              children: [
-                DashboardCard(
-                  heroTag: HeroTags.addNewInvoice.value,
-                  onTap: () {
-                    Navigator.pushNamed(context, AppRoutes.addNewInvoice);
-                  },
-                  iconPath: 'assets/icons/add_invoice_icon.svg',
-                  backgroundColor: AppColors.invoiceCardBg,
-                  title: 'إضافة فاتورة',
-                  subtitle: 'إدخال وتسجيل الفواتير بكل سهولة',
-                  iconColor: AppColors.invoiceAccent,
-                ).slideInRight(), DashboardCard(
-                  heroTag: HeroTags.addNewOfficer.value,
-                  onTap: () {
-                    Navigator.pushNamed(context, AppRoutes.addNewOfficer);
-                  },
-                  iconPath: 'assets/icons/add_officers_icon.svg',
-                  backgroundColor: AppColors.softBlue,
-                  title: 'إضافة ضباط جدد',
-                  subtitle: 'تسجيل وإضافة ضباط جدد في النظام',
-                  iconColor: AppColors.primary,
-                ).slideInLeft(), DashboardCard(
-                  heroTag: HeroTags.financials.value,
-                  onTap: () {
-                    //todo go to financials
-                  },
-                  iconPath: 'assets/icons/financials_icon.svg',
-                  backgroundColor: AppColors.financialsIconBg,
-                  title: 'ماليات',
-                  subtitle: 'متابعة و إدارة الأمور المالية',
-                  iconColor: AppColors.financialsIconAccent,
-                ).slideInRight(), DashboardCard(
-                  heroTag: HeroTags.disburse.value,
-                  onTap: () {
-                    //todo go to disburse
-                  },
-                  iconPath: 'assets/icons/package_icon.svg',
-                  backgroundColor: AppColors.disburseIconBg,
-                  title: 'صرف أصناف',
-                  subtitle: 'صرف الأصناف و المستهلكات المتاحة',
-                  iconColor: AppColors.disburseAccent,
-                ).slideInLeft(),
-              ],
-            ),
+            child: PageView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: context.read<HomeCubit>().pageController,
+              children: AppConstants.tabs,),
           ),
         ],
-      ),
+      )
     );
+  },
+),
+);
   }
 }

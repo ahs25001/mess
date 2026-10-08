@@ -7,6 +7,7 @@ abstract class AppColors {
   static const Color cardBackground = Color(0xFFFFFFFF);
   static const Color tableHeder = Color(0xFFEEF2F6);
   static const Color borderColor = Color(0xFFD0D5DD);
+  static const Color hintColor = Color(0xFFB2B9C3);
   static const Color softIceBlue = Color(0xFFF0F5FA);
   static const Color lightBlue = Color(0xFFD0E2F7);
   static const Color softBlue = Color(0xFFD9E6F7);
