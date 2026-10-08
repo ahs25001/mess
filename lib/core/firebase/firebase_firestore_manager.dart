@@ -33,10 +33,10 @@ import '../models/officer_model.dart';
     await _firebaseFirestore.collection("Officers").doc(docId).delete();
   }
   Future<QuerySnapshot<Map<String, dynamic>>>getOfficers()async{
-    return await _firebaseFirestore.collection("Officers").get();
+    return await _firebaseFirestore.collection("Officers").orderBy('militaryIDNumber',descending: false).get();
   }
-  Future<void>updateOfficer({required OfficerModel officer}) async{
-    await _firebaseFirestore.collection("Officers").doc(officer.id).update(officer.toJson());
+  Future<void>updateOfficer({required OfficerModel? officer}) async{
+    await _firebaseFirestore.collection("Officers").doc(officer?.id).update(officer?.toJson()??{});
   }
   Future<DocumentSnapshot<Map<String, dynamic>>>getOfficerById({required String docId}) async{
     return await _firebaseFirestore.collection("Officers").doc(docId).get();
