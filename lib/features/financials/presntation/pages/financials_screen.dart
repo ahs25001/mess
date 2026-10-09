@@ -74,6 +74,10 @@ class FinancialsScreen extends StatelessWidget {
                   Navigator.pop(context); // Dismiss loading dialog
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
+                      margin: EdgeInsets.only(
+                        bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
+                      ),
+                      behavior: SnackBarBehavior.floating,
                       backgroundColor: AppColors.red,
                       content: Text(
                         state.errorMessage ?? "",
