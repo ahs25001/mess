@@ -21,6 +21,8 @@ class AddNewInvoiceScreen extends StatelessWidget {
         child: BlocProvider(
           create: (context) => AddNewInvoiceCubit(),
           child: Material(
+            color:  AppColors.backgroundCanvas
+            ,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
