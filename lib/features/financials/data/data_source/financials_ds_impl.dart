@@ -3,11 +3,16 @@ import 'package:dartz/dartz.dart';
 import 'package:mess_app/core/errors/firebase_errors.dart';
 import 'package:mess_app/core/firebase/firebase_firestore_manager.dart';
 import 'package:mess_app/core/models/officer_model.dart';
+import 'package:mess_app/core/shared_preferences/shared_preferences_manager.dart';
+import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/features/financials/data/data_source/financials_ds.dart';
+
+import '../../../../core/errors/shared_preferences_errors.dart';
 
 class FinancialsDsImpl implements FinancialsDs {
   FirebaseFirestoreManager firebaseFirestoreManager;
-  FinancialsDsImpl(this.firebaseFirestoreManager);
+  SharedPreferencesManager sharedPreferencesManager;
+  FinancialsDsImpl(this.firebaseFirestoreManager,this.sharedPreferencesManager);
 
   @override
   Future<Either<FirebaseErrors, List<OfficerModel>?>> getOfficers() async {
@@ -34,5 +39,14 @@ class FinancialsDsImpl implements FinancialsDs {
     } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
+  }
+  @override
+  Either<SharedPreferencesErrors, num?> getCapital() {
+  try{
+   String capital = sharedPreferencesManager.getString(SharedPreferencesKeys.capital.value);
+   return Right(num.tryParse(capital));
+  }catch(e){
+    return Left(SharedPreferencesLocalErrors(e.toString()));
+  }
   }
 }
