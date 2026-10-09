@@ -13,6 +13,9 @@ class AppThemes {
 
   ),
   fontFamily: "Almarai",
-    scaffoldBackgroundColor: AppColors.backgroundCanvas
+    dialogTheme: DialogThemeData(
+      backgroundColor: AppColors.backgroundCanvas
+    ),
+    scaffoldBackgroundColor: AppColors.backgroundCanvas,
   );
 }

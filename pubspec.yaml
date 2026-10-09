@@ -38,6 +38,7 @@ dependencies:
   liquidify: ^0.1.1
   cloud_firestore: ^6.10.0
   flutter_custom_clippers: ^2.1.0
+  shared_preferences: ^2.5.6
 #  icons_plus: ^5.0.0
   firebase_core: ^4.15.0
   flutter_svg: ^2.3.0

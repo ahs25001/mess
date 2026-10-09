@@ -19,8 +19,9 @@ class FinancialsScreen extends StatelessWidget {
       body: Hero(
         tag: HeroTags.financials.value,
         child: Material(
+          color: AppColors.backgroundCanvas,
           child: BlocProvider(
-            create: (context) => FinancialsCubit()..getOfficers(),
+            create: (context) => FinancialsCubit()..getOfficers()..getCapital(),
             child: BlocConsumer<FinancialsCubit, FinancialsState>(
               listener: (context, state) {
                 if (state.status == FinancialsStatus.addMoneyLoading) {
@@ -54,7 +55,7 @@ class FinancialsScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                } else if (state.status == FinancialsStatus.addMoneySuccess) {
+                }  else if (state.status == FinancialsStatus.addMoneySuccess) {
                   Navigator.pop(context); // Dismiss loading dialog
                   Navigator.pop(context); // Dismiss bottom sheet
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -69,11 +70,33 @@ class FinancialsScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                } else if (state.status == FinancialsStatus.addMoneyFailure ||
-                    state.status == FinancialsStatus.getOfficersFailure) {
+                } else if (state.status == FinancialsStatus.addMoneyFailure
+                   ) {
                   Navigator.pop(context); // Dismiss loading dialog
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
+                      margin: EdgeInsets.only(
+                        bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: AppColors.red,
+                      content: Text(
+                        state.errorMessage ?? "",
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ),
+                  );
+                }else if (state.status == FinancialsStatus.getCapitalFailure|| state.status == FinancialsStatus.getOfficersFailure
+                   ) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      margin: EdgeInsets.only(
+                        bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
+                      ),
+                      behavior: SnackBarBehavior.floating,
                       backgroundColor: AppColors.red,
                       content: Text(
                         state.errorMessage ?? "",
@@ -169,6 +192,7 @@ class FinancialsScreen extends StatelessWidget {
                                         >(
                                           builder: (context, state) =>
                                               BalanceBottomSheet(
+                                                capital: state.capital??0,
                                                 officers: state.officers,
                                               ),
                                         ),

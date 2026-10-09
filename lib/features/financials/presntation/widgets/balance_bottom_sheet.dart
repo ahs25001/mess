@@ -5,8 +5,8 @@ import 'package:mess_app/core/models/officer_model.dart';
 import '../../../../core/utils/app_colors.dart';
 class BalanceBottomSheet extends StatelessWidget {
   final List<OfficerModel>?officers;
-  const BalanceBottomSheet({super.key,required this.officers});
-
+  final num capital;
+  const BalanceBottomSheet({super.key,required this.officers,required this.capital});
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -127,7 +127,7 @@ class BalanceBottomSheet extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      '700',
+                      capital.toString(),
                       style: TextStyle(
                         fontSize: 14.sp,
                       ),
@@ -146,7 +146,7 @@ class BalanceBottomSheet extends StatelessWidget {
                   ),   Expanded(
                     flex: 1,
                     child: Text(
-                      "${700-e.amount}",
+                      "${capital-e.amount}",
                       style: TextStyle(
                         fontSize: 14.sp,
                       ),
