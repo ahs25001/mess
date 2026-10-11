@@ -40,7 +40,7 @@ class AddInvoiceDSImpl implements AddInvoiceDS {
   Either<Stream<QuerySnapshot<Map<String, dynamic>>>, FirebaseErrors>
   getFood() {
     try {
-      return Left(firebaseFirestoreManager.getFood());
+      return Left(firebaseFirestoreManager.getAllFood());
     } catch (e) {
       return Right(FirebaseRemoteError(error: e.toString()));
     }

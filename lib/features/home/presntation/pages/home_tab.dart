@@ -60,7 +60,7 @@ class HomeTab extends StatelessWidget {
               DashboardCard(
                 heroTag: HeroTags.disburse.value,
                 onTap: () {
-                  //todo go to disburse
+                  Navigator.pushNamed(context, AppRoutes.dispensingItems);
                 },
                 iconPath: 'assets/icons/package_icon.svg',
                 backgroundColor: AppColors.disburseIconBg,

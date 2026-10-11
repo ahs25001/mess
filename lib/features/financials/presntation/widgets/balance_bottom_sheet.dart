@@ -14,7 +14,7 @@ class BalanceBottomSheet extends StatelessWidget {
       children: [
         // Table Header
         Container(
-          height: 35.h,
+          padding: EdgeInsets.symmetric(vertical:8.h,horizontal: 2.w),
           decoration: BoxDecoration(
             color: AppColors.borderColor,
             borderRadius: BorderRadius.only(
@@ -89,7 +89,7 @@ class BalanceBottomSheet extends StatelessWidget {
               milliseconds: 300,
             ),
             child: Container(
-              height: 35.h,
+              padding: EdgeInsets.symmetric(vertical:8.h,horizontal: 2.w),
               decoration: BoxDecoration(
                 color: (index % 2 != 0)
                     ? AppColors.borderColor
