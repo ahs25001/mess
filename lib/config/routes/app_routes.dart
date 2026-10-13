@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/add_new_invoice/presentation/pages/add_new_invoice_screen.dart';
 import '../../features/adding_officers/presentation/pages/add_new_officer_screen.dart';
+import '../../features/dispensing_items/presentation/pages/dispensing_items_screen.dart';
 import '../../features/financials/presntation/pages/financials_screen.dart';
 import '../../features/home/presntation/pages/home_screen.dart';
 
@@ -10,7 +11,7 @@ class AppRoutes {
   static const String addNewInvoice = '/add_new_invoice';
   static const String addNewOfficer = '/add_new_officer';
   static const String financials = '/financials';
-  static const String disburse = '/disburse';
+  static const String dispensingItems = '/dispensing_items';
 }
 class Routes {
   static Route onGenerateRoute(RouteSettings settings){
@@ -18,6 +19,10 @@ class Routes {
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (context) => const HomeScreen(),
+        );
+        case AppRoutes.dispensingItems:
+        return MaterialPageRoute(
+          builder: (context) => const DispensingItemsScreen(),
         );
         case AppRoutes.addNewInvoice:
         return MaterialPageRoute(

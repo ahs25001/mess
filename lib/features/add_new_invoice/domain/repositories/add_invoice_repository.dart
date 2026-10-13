@@ -4,9 +4,13 @@ import 'package:mess_app/core/errors/firebase_errors.dart';
 import 'package:mess_app/core/models/ivoice_model.dart';
 
 import '../../../../core/models/food_model.dart';
+import '../../../dispensing_items/data/models/dispensing_items_model.dart';
+
 abstract class AddInvoiceRepository {
-  Future<Either<FirebaseErrors,void>>addNewInvoice({required InvoiceModel invoice});
+  Future<Either<FirebaseErrors, void>> addNewInvoice({
+    required InvoiceModel invoice,
+  });
   Future<Either<FirebaseErrors, void>> addNewFood({required FoodModel food});
   Either<Stream<QuerySnapshot<Map<String, dynamic>>>, FirebaseErrors> getFood();
-  Future<Either<FirebaseErrors, void>>upDateFood({required FoodModel food});
+  Future<Either<FirebaseErrors, void>> upDateFood({required FoodModel food});
 }
