@@ -89,10 +89,7 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
       ),
     );
     for (var item in items) {
-      //todo update food quantity and price
       List<PriceModel> prices = List<PriceModel>.from(item.food?.prices ?? []);
-      print("prices : $prices");
-      print("food : ${item.food?.prices}");
       prices.add(
         PriceModel(
           price:

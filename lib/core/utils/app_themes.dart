@@ -10,7 +10,9 @@ class AppThemes {
   ),
   inputDecorationTheme: InputDecorationTheme(
     prefixIconColor: AppColors.primary,
-
+  ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: AppColors.backgroundCanvas
   ),
   fontFamily: "Almarai",
     dialogTheme: DialogThemeData(
