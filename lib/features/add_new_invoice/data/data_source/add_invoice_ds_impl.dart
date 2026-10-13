@@ -5,6 +5,7 @@ import 'package:mess_app/core/errors/firebase_errors.dart';
 import 'package:mess_app/core/models/food_model.dart';
 
 import 'package:mess_app/core/models/ivoice_model.dart';
+import 'package:mess_app/features/dispensing_items/data/models/dispensing_items_model.dart';
 
 import '../../../../core/firebase/firebase_firestore_manager.dart';
 import 'add_invoice_ds.dart';
@@ -51,13 +52,25 @@ class AddInvoiceDSImpl implements AddInvoiceDS {
     required FoodModel food,
   }) async {
     try {
-      await firebaseFirestoreManager.updateData(
-        collection: "Food",
-        data: food.toJson(),
+      await firebaseFirestoreManager.updateFood(
+       food
       );
       return Right(null);
     } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
   }
+
+  @override
+  Future<Either<FirebaseRemoteError, void>> addDispensingItemsToCanteen({
+    required DispensingItemsModel dispensingItems,
+  }) async{
+   try{
+     await firebaseFirestoreManager.addDispensingItemsToCanteen(dispensingItems: dispensingItems);
+     return Right(null);
+   }catch(e){
+     return Left(FirebaseRemoteError(error: e.toString()));
+   }
+  }
+
 }

@@ -2,12 +2,17 @@ part of 'dispensing_item_cubit.dart';
 
 enum DispensingItemStatus {
   init,
+  success,
+  error,
   getOfficersLoading,
   getOfficersSuccess,
   getOfficersError,
   getAvailableFoodsLoading,
   getAvailableFoodsSuccess,
   getAvailableFoodsError,
+  saveDispensingItemsLoading,
+  saveDispensingItemsSuccess,
+  saveDispensingItemsError,
 }
 
 class DispensingItemState {
@@ -18,8 +23,10 @@ class DispensingItemState {
   final FoodModel? selectedFood;
   final List<DispensingItemsModel>? items;
   final String? massage;
+  final OfficerModel? selectedOfficer;
   const DispensingItemState({
     this.dispensingItemsTabType,
+    this.selectedOfficer,
     this.items,
     this.dispensingItemStatus,
     this.selectedFood,
@@ -28,6 +35,7 @@ class DispensingItemState {
     this.availableFoods,
   });
   DispensingItemState copyWith({
+    OfficerModel? selectedOfficer,
     List<FoodModel>? availableFoods,
     List<DispensingItemsModel>? items,
     DispensingItemStatus? dispensingItemStatus,
@@ -37,7 +45,8 @@ class DispensingItemState {
     FoodModel? selectedFood,
   }) => DispensingItemState(
     items: items ?? this.items,
-    selectedFood: selectedFood ?? this.selectedFood,
+    selectedOfficer: selectedOfficer ?? this.selectedOfficer,
+    selectedFood: selectedFood,
     availableFoods: availableFoods ?? this.availableFoods,
     officers: officers ?? this.officers,
     massage: massage ?? this.massage,

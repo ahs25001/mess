@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mess_app/core/models/food_model.dart';
 import 'package:mess_app/core/models/officer_model.dart';
+import 'package:mess_app/core/models/price_model.dart';
 import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/features/dispensing_items/data/models/dispensing_items_model.dart';
 import 'package:mess_app/features/dispensing_items/domain/repositories/dispensing_items_repo.dart';
@@ -13,6 +14,7 @@ part 'dispensing_item_state.dart';
 
 class DispensingItemCubit extends Cubit<DispensingItemState> {
   ScrollController scrollController = ScrollController();
+  GlobalKey<FormState> addItemFormKey = GlobalKey<FormState>();
   TextEditingController quantityController = TextEditingController();
   void changeDispensingItemsTabType(
     DispensingItemsTabType dispensingItemsTabType,
@@ -37,6 +39,15 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
     );
   }
 
+  void selectOfficer(OfficerModel? officer) {
+    emit(
+      state.copyWith(
+        dispensingItemStatus: DispensingItemStatus.init,
+        selectedOfficer: officer,
+      ),
+    );
+  }
+
   void addNewItem() {
     emit(
       state.copyWith(
@@ -48,34 +59,48 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
     double totalPrice = 0;
     int index = 0;
     double quantity = double.tryParse(quantityController.text) ?? 0.0;
+    if ((state.selectedFood?.quantity ?? 0) < quantity) {
+      emit(
+        state.copyWith(
+          dispensingItemStatus: DispensingItemStatus.error,
+          massage: "الكمية المصروفه أكبر من المتوفرة",
+        ),
+      );
+
+      return;
+    }
     while (index < (state.selectedFood?.prices.length ?? 0)) {
       if (quantity == state.selectedFood?.prices[index].quantity) {
         totalPrice +=
             (state.selectedFood?.prices[index].price ?? 0.0) * quantity;
         state.selectedFood?.prices.removeAt(index);
+        state.selectedFood?.quantity -= quantity;
         break;
       } else if (quantity < state.selectedFood?.prices[index].quantity) {
         totalPrice +=
             (state.selectedFood?.prices[index].price ?? 0.0) * quantity;
         state.selectedFood?.prices[index].quantity -= quantity;
+        state.selectedFood?.quantity -= quantity;
         break;
       } else {
         totalPrice +=
             (state.selectedFood?.prices[index].price ?? 0.0) * quantity;
         quantity = quantity - state.selectedFood?.prices[index].quantity;
         state.selectedFood?.prices.removeAt(index);
-        index++;
+        state.selectedFood?.quantity -= quantity;
       }
     }
     items.add(
       DispensingItemsModel(
+        food: state.selectedFood!,
+        // prices: state.selectedFood?.prices ?? [],
+        officerId: state.selectedOfficer?.id ?? "",
         id: state.selectedFood?.id ?? "",
         quantity: double.tryParse(quantityController.text) ?? 0.0,
         name: state.selectedFood?.name ?? "",
         totalPrice: totalPrice,
       ),
     );
-
     quantityController.clear();
     emit(state.copyWith(items: items, selectedFood: null));
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -102,7 +127,7 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
   }
 
   void getAvailableFood() async {
-    WidgetsBinding.instance.addPostFrameCallback((_)async{
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       emit(
         state.copyWith(
           dispensingItemStatus: DispensingItemStatus.getAvailableFoodsLoading,
@@ -113,7 +138,7 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
       );
       var result = await repo.getAvailableFoods();
       result.fold(
-            (l) {
+        (l) {
           emit(
             state.copyWith(
               dispensingItemStatus: DispensingItemStatus.getAvailableFoodsError,
@@ -121,17 +146,171 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
             ),
           );
         },
-            (r) {
+        (r) {
           emit(
             state.copyWith(
-              dispensingItemStatus: DispensingItemStatus.getAvailableFoodsSuccess,
+              dispensingItemStatus:
+                  DispensingItemStatus.getAvailableFoodsSuccess,
               availableFoods: r,
             ),
           );
         },
       );
     });
+  }
 
+  void saveDispensingItems() async {
+    emit(
+      state.copyWith(
+        dispensingItemStatus: DispensingItemStatus.saveDispensingItemsLoading,
+      ),
+    );
+    DispensingItemsRepo repo = DispensingItemsRepoImpl(
+      DispensingItemsDsImpl(FirebaseFirestoreManager()),
+    );
+    switch (state.dispensingItemsTabType ?? DispensingItemsTabType.init) {
+      case DispensingItemsTabType.isCanteen:
+        for (DispensingItemsModel item in state.items ?? []) {
+          var addToCanteenResult = await repo.addDispensingItemsToCanteen(
+            dispensingItems: item,
+          );
+          addToCanteenResult.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          var updateResult = await repo.updateFood(item.food);
+          updateResult.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          if (state.dispensingItemStatus ==
+              DispensingItemStatus.saveDispensingItemsError) {
+            break;
+          }
+        }
+      case DispensingItemsTabType.init:
+      case DispensingItemsTabType.isHarmony:
+        for (var item in state.items ?? []) {
+          var result = await repo.addDispensingItemsToHarmony(
+            dispensingItems: item,
+          );
+          var updateResult = await repo.updateFood(item.food);
+          updateResult.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          result.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          if (state.dispensingItemStatus ==
+              DispensingItemStatus.saveDispensingItemsError) {
+            break;
+          }
+        }
+      case DispensingItemsTabType.isHospitality:
+        for (var item in state.items ?? []) {
+          var result = await repo.addDispensingItemsToHospitality(
+            dispensingItems: item,
+          );
+          var updateResult = await repo.updateFood(item.food);
+          updateResult.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          result.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          if (state.dispensingItemStatus ==
+              DispensingItemStatus.saveDispensingItemsError) {
+            break;
+          }
+        }
+      case DispensingItemsTabType.isOfficer:
+        OfficerModel selectedOfficer = state.selectedOfficer!;
+        num totalPrice = 0;
+        for (DispensingItemsModel item in state.items ?? []) {
+          item.officerId = state.selectedOfficer?.id ?? "";
+          totalPrice += item.totalPrice;
+          var result = await repo.addDispensingItemsToOfficer(
+            dispensingItems: item,
+          );
+          var updateResult = await repo.updateFood(item.food);
+          updateResult.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          result.fold((l) {
+            emit(
+              state.copyWith(
+                dispensingItemStatus:
+                    DispensingItemStatus.saveDispensingItemsError,
+              ),
+            );
+          }, (r) {});
+          if (state.dispensingItemStatus ==
+              DispensingItemStatus.saveDispensingItemsError) {
+            break;
+          }
+        }
+        selectedOfficer.amount = selectedOfficer.amount - totalPrice;
+        var result = await repo.updateOfficer(selectedOfficer);
+        result.fold((l) {
+          emit(
+            state.copyWith(
+              dispensingItemStatus:
+                  DispensingItemStatus.saveDispensingItemsError,
+            ),
+          );
+        }, (r) {});
+    }
+    if (state.dispensingItemStatus !=
+        DispensingItemStatus.saveDispensingItemsError) {
+      emit(
+        state.copyWith(
+          dispensingItemStatus: DispensingItemStatus.saveDispensingItemsSuccess,
+          items: [],
+          selectedFood: null
+        ),
+      );
+      getAvailableFood();
+    }
+  }
+
+  @override
+  Future<void> close() {
+    quantityController.dispose();
+    scrollController.dispose();
+    return super.close();
   }
 
   Future<void> getOfficers() async {
@@ -159,7 +338,8 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
       ),
     );
   }
-  DispensingItemCubit() : super(DispensingItemInitial()){
+
+  DispensingItemCubit() : super(DispensingItemInitial()) {
     getAvailableFood();
   }
 }

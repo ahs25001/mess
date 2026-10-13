@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mess_app/core/models/food_model.dart';
 import 'package:mess_app/core/models/ivoice_model.dart';
+import '../../features/dispensing_items/data/models/dispensing_items_model.dart';
 import '../models/officer_model.dart';
 
 class FirebaseFirestoreManager {
@@ -16,24 +17,6 @@ class FirebaseFirestoreManager {
     food.id = doc.id;
     await doc.set(food.toJson());
   }
-
-  Future<void> updateData({
-    required String collection,
-    required Map<String, dynamic> data,
-  }) async {
-    await _firebaseFirestore
-        .collection(collection)
-        .doc(data['id'])
-        .update(data);
-  }
-
-  Future<void> deleteData({
-    required String collection,
-    required String docId,
-  }) async {
-    await _firebaseFirestore.collection(collection).doc(docId).delete();
-  }
-
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllFood() {
     return _firebaseFirestore.collection("Food").snapshots();
   }
@@ -45,7 +28,29 @@ class FirebaseFirestoreManager {
         .where('isFixedMiscellaneousExpenses', isEqualTo: false).where('quantity',isNotEqualTo: 0)
         .get();
   }
-
+  Future<void> updateFood(FoodModel? food)async{
+    await _firebaseFirestore
+        .collection("Food")
+        .doc(food?.id)
+        .update(food?.toJson() ?? {});
+  }
+  Future<void>addDispensingItemsToOfficer({required DispensingItemsModel dispensingItems}) async {
+    var doc = _firebaseFirestore.collection("DispensingItemsToOfficer").doc();
+    dispensingItems.id = doc.id;
+    await doc.set(dispensingItems.toJson());
+  } Future<void>addDispensingItemsToCanteen({required DispensingItemsModel dispensingItems}) async {
+    var doc = _firebaseFirestore.collection("DispensingItemsToCanteen").doc();
+    dispensingItems.id = doc.id;
+    await doc.set(dispensingItems.toJson());
+  } Future<void>addDispensingItemsToHospitality({required DispensingItemsModel dispensingItems}) async {
+    var doc = _firebaseFirestore.collection("Hospitality").doc();
+    dispensingItems.id = doc.id;
+    await doc.set(dispensingItems.toJson());
+  } Future<void>addDispensingItemsToHarmony({required DispensingItemsModel dispensingItems}) async {
+    var doc = _firebaseFirestore.collection("Harmony").doc();
+    dispensingItems.id = doc.id;
+    await doc.set(dispensingItems.toJson());
+  }
   Future<void> addOfficer({required OfficerModel officer}) async {
     var doc = _firebaseFirestore.collection("Officers").doc();
     officer.id = doc.id;

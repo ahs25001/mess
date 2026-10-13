@@ -5,6 +5,7 @@ import 'package:mess_app/core/utils/app_colors.dart';
 import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/core/widgets/custom_app_bar.dart';
 import 'package:mess_app/features/dispensing_items/presentation/cubit/dispensing_item_cubit.dart';
+import '../widgets/combo_meal_tab.dart';
 import '../widgets/dispensing_items_tab.dart';
 
 class DispensingItemsScreen extends StatefulWidget {
@@ -70,13 +71,16 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
                     children: [
                       BlocConsumer<DispensingItemCubit, DispensingItemState>(
                         listener: (context, state) {
-                          print(state.dispensingItemStatus);
                           if (state.dispensingItemStatus ==
                                   DispensingItemStatus.getOfficersError ||
                               state.dispensingItemStatus ==
-                                  DispensingItemStatus.getAvailableFoodsError) {
+                                  DispensingItemStatus.getAvailableFoodsError||
+                              state.dispensingItemStatus ==
+                                  DispensingItemStatus.saveDispensingItemsError||state.dispensingItemStatus ==
+                              DispensingItemStatus.error) {
                             if (!(state.dispensingItemStatus ==
-                                DispensingItemStatus.getAvailableFoodsError)) {
+                                DispensingItemStatus.getAvailableFoodsError||state.dispensingItemStatus ==
+                                DispensingItemStatus.error)) {
                               Navigator.pop(context); // Dismiss loading dialog
                             }
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -121,8 +125,29 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
                                 ),
                               ),
                             );
-                          } else if (state.dispensingItemStatus ==
-                                  DispensingItemStatus.getOfficersLoading) {
+                          }
+
+                           else if (state.dispensingItemStatus ==
+                              DispensingItemStatus.saveDispensingItemsSuccess) {
+                             Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: AppColors.invoiceAccent,
+                                content: Text(
+                                  "تم صرف الأصناف بنجاح",
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          else if (state.dispensingItemStatus ==
+                              DispensingItemStatus.getOfficersLoading||
+                              state.dispensingItemStatus ==
+                              DispensingItemStatus.saveDispensingItemsLoading) {
                             showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -143,11 +168,87 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
                         },
                         builder: (context, state) {
                           return DispensingItemsTab(
+                            onSave: () {
+                              if (((state.items?.isNotEmpty) ?? false) &&
+                                 ( ((state.dispensingItemsTabType !=
+                                      DispensingItemsTabType.init&&state.dispensingItemsTabType !=
+                                      DispensingItemsTabType.isOfficer))||(state.dispensingItemsTabType ==
+                                  DispensingItemsTabType.isOfficer&&state.selectedOfficer!=null))) {
+                                context
+                                    .read<DispensingItemCubit>()
+                                    .saveDispensingItems();
+                              }
+                              else if ((state.items?.isEmpty) ?? true){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: AppColors.red,
+                                    content: Text(
+                                     'أدخل صنف واحد على الأقل',
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              else if(state.dispensingItemsTabType ==
+                                  DispensingItemsTabType.init){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: AppColors.red,
+                                    content: Text(
+                                     'إختر جهة الصرف',
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }else if (state.dispensingItemsTabType ==
+                                  DispensingItemsTabType.isOfficer && state.selectedOfficer==null){
+                               ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+                                 behavior: SnackBarBehavior.floating,
+                                 backgroundColor: AppColors.red,
+                                 content: Text(
+                                   'إختر ضابط',
+                                   style: TextStyle(
+                                     color: AppColors.white,
+                                     fontSize: 14.sp,
+                                   ),
+                                 ),
+                               ));
+                              }
+                            },
+                            selectOfficer: (officer) {
+                              context.read<DispensingItemCubit>().selectOfficer(
+                                officer,
+                              );
+                            },
+                            fromKey: context
+                                .read<DispensingItemCubit>()
+                                .addItemFormKey,
+                            scrollController: context
+                                .read<DispensingItemCubit>()
+                                .scrollController,
                             onAddItem: () {
-                              context.read<DispensingItemCubit>().addNewItem();
+                              if (context
+                                  .read<DispensingItemCubit>()
+                                  .addItemFormKey
+                                  .currentState!
+                                  .validate()) {
+                                context
+                                    .read<DispensingItemCubit>()
+                                    .addNewItem();
+                              }
                             },
                             addItemValidator: (value) {
-                              //todo add item validator
+                              if (value == null || value.trim().isEmpty) {
+                                return "هذا الحقل مطلوب";
+                              }
                             },
                             quantityController: context
                                 .read<DispensingItemCubit>()
@@ -193,7 +294,7 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
                           );
                         },
                       ),
-                      Container(color: Colors.green),
+                      ComboMealTab(),
                     ],
                   ),
                 ),

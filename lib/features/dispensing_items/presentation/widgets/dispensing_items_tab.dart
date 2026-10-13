@@ -16,18 +16,27 @@ class DispensingItemsTab extends StatelessWidget {
   final List<DispensingItemsModel> items;
   final Function(int index) onDelete;
   final TextEditingController quantityController;
+  final ScrollController scrollController;
   final Function(String? value) addItemValidator;
+  final Function(OfficerModel? officer) selectOfficer;
+  final GlobalKey<FormState> fromKey;
   final VoidCallback onCanteenChecked,
       onHarmonyChecked,
       onHospitalityChecked,
       onAddItem,
+      onSave,
       onOfficerChecked;
 
   const DispensingItemsTab({
     super.key,
+    required this.selectOfficer,
+    required this.onSave,
     required this.dispensingItemsTabType,
+    required this.fromKey,
+    required this.scrollController,
     required this.quantityController,
-    required this.addItemValidator,required this.onAddItem,
+    required this.addItemValidator,
+    required this.onAddItem,
     required this.items,
     required this.onDelete,
     required this.officers,
@@ -192,18 +201,20 @@ class DispensingItemsTab extends StatelessWidget {
                           listItemBuilder:
                               (context, officer, isSelected, onItemSelect) =>
                                   Text(
-                            "${officer.rank} ${officer.name}",
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                                    "${officer.rank} ${officer.name}",
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+
                           decoration: CustomDropdownDecoration(
                             closedFillColor: Colors.transparent,
                             expandedBorderRadius: BorderRadius.circular(16.r),
-                            expandedBorder:
-                                Border.all(color: AppColors.primary),
+                            expandedBorder: Border.all(
+                              color: AppColors.primary,
+                            ),
                             closedBorder: Border.all(
                               color: AppColors.borderColor,
                               width: 2.sp,
@@ -211,7 +222,9 @@ class DispensingItemsTab extends StatelessWidget {
                             closedBorderRadius: BorderRadius.circular(16.r),
                           ),
                           items: officers ?? [],
-                          onChanged: (selectedOfficer) {},
+                          onChanged: (selectedOfficer) {
+                            selectOfficer(selectedOfficer);
+                          },
                         ),
                     },
                   ),
@@ -219,6 +232,7 @@ class DispensingItemsTab extends StatelessWidget {
                 SizedBox(height: 10.h),
                 Expanded(
                   child: ListView(
+                    controller: scrollController,
                     children: [
                       Container(
                         height: 35.h,
@@ -340,130 +354,150 @@ class DispensingItemsTab extends StatelessWidget {
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(
-            vertical: 10.h,
-            horizontal: 10.w,
-          ),
+          padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(10.r),
               bottomRight: Radius.circular(10.r),
             ),
             border: Border(
-              bottom: BorderSide(
-                color: AppColors.borderColor,
-                width: 2.w,
-              ),
-              left: BorderSide(
-                color: AppColors.borderColor,
-                width: 2.w,
-              ),
-              right: BorderSide(
-                color: AppColors.borderColor,
-                width: 2.w,
-              ),
+              bottom: BorderSide(color: AppColors.borderColor, width: 2.w),
+              left: BorderSide(color: AppColors.borderColor, width: 2.w),
+              right: BorderSide(color: AppColors.borderColor, width: 2.w),
             ),
             color: AppColors.softBlue,
           ),
-          child: Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  onAddItem();
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 5.w,
-                    vertical: 6.h,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.r),
-                    color: AppColors.invoiceAccent,
-                  ),
-                  child: Icon(
-                    Icons.add,
-                    color: AppColors.white,
-                    size: 25.sp,
-                  ),
-                ),
-              ),
-              SizedBox(width: 20.w),
-              BlocBuilder<DispensingItemCubit, DispensingItemState>(
-                builder: (context, state) {
-                  return Expanded(
-                    child: CustomDropdown<FoodModel>(
-                      validator: (p0) {
-                        if (p0 == null) {
-                          return "إختر صنف";
-                        }
-                        return null;
+          child: Form(
+            key: fromKey,
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        onAddItem();
                       },
-                      hintText: "إختر الصنف",
-                      initialItem: state.selectedFood,
-                      headerBuilder: (context, selectedItem, enabled) => Text(
-                        selectedItem.name,
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 14.sp,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 5.w,
+                          vertical: 6.h,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7.r),
+                          color: AppColors.invoiceAccent,
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: AppColors.white,
+                          size: 25.sp,
                         ),
                       ),
-                      decoration: CustomDropdownDecoration(
-                        closedFillColor: AppColors.cardBackground,
-                        closedBorderRadius: BorderRadius.circular(10.r),
-                      ),
-                      listItemBuilder: (context, item, isSelected, onItemSelect) => Text(
-                        item.name,
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                      items: state.availableFoods ?? [],
-                      onChanged: (p0) {
-                        context.read<DispensingItemCubit>().selectFood(p0);
+                    ),
+                    SizedBox(width: 20.w),
+                    BlocBuilder<DispensingItemCubit, DispensingItemState>(
+                      builder: (context, state) {
+                        return Expanded(
+                          child: CustomDropdown<FoodModel>(
+                            validator: (p0) {
+                              if (p0 == null) {
+                                return "إختر صنف";
+                              }
+                              return null;
+                            },
+                            hintText: "إختر الصنف",
+                            initialItem: state.selectedFood,
+                            headerBuilder: (context, selectedItem, enabled) =>
+                                Text(
+                                  selectedItem.name,
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+
+                            decoration: CustomDropdownDecoration(
+                              closedFillColor: AppColors.cardBackground,
+                              closedBorderRadius: BorderRadius.circular(10.r),
+                            ),
+                            listItemBuilder:
+                                (context, item, isSelected, onItemSelect) =>
+                                    Text(
+                                      item.name,
+                                      style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                            items: state.availableFoods ?? [],
+                            onChanged: (p0) {
+                              context.read<DispensingItemCubit>().selectFood(
+                                p0,
+                              );
+                            },
+                          ),
+                        );
                       },
                     ),
-                  );
-                },
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: TextFormField(
-                  controller: quantityController,
-                  validator: (value) {
-                    return addItemValidator(value);
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: TextFormField(
+                        controller: quantityController,
+                        validator: (value) {
+                          return addItemValidator(value);
+                        },
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(fontSize: 12.sp),
+                        decoration: InputDecoration(
+                          hintText: 'الكمية',
+                          hintStyle: TextStyle(fontSize: 12.sp),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 5.h,
+                            horizontal: 10.w,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(
+                              color: AppColors.borderColor,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(
+                              color: AppColors.borderColor,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(color: AppColors.primary),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                FilledButton(
+                  onPressed: () {
+                    onSave();
                   },
-                  keyboardType: TextInputType.number,
-                  style: TextStyle(fontSize: 12.sp),
-                  decoration: InputDecoration(
-                    hintText: 'الكمية',
-                    hintStyle: TextStyle(fontSize: 12.sp),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 5.h,
-                      horizontal: 10.w,
-                    ),
-                    border: OutlineInputBorder(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    minimumSize: Size(double.infinity, 40.h),
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
-                      borderSide: BorderSide(
-                        color: AppColors.borderColor,
-                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                      borderSide: BorderSide(
-                        color: AppColors.borderColor,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                      borderSide: BorderSide(
-                        color: AppColors.primary,
-                      ),
+                  ),
+                  child: Text(
+                    'حفظ',
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
