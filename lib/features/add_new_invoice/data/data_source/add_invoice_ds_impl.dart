@@ -5,7 +5,6 @@ import 'package:mess_app/core/errors/firebase_errors.dart';
 import 'package:mess_app/core/models/food_model.dart';
 
 import 'package:mess_app/core/models/ivoice_model.dart';
-import 'package:mess_app/features/dispensing_items/data/models/dispensing_items_model.dart';
 
 import '../../../../core/firebase/firebase_firestore_manager.dart';
 import 'add_invoice_ds.dart';
@@ -13,13 +12,14 @@ import 'add_invoice_ds.dart';
 class AddInvoiceDSImpl implements AddInvoiceDS {
   FirebaseFirestoreManager firebaseFirestoreManager;
   AddInvoiceDSImpl({required this.firebaseFirestoreManager});
+
   @override
   Future<Either<FirebaseErrors, void>> addNewInvoice({
     required InvoiceModel invoice,
   }) async {
     try {
       await firebaseFirestoreManager.addInvoice(invoice: invoice);
-      return Right(null);
+      return const Right(null);
     } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
@@ -31,7 +31,7 @@ class AddInvoiceDSImpl implements AddInvoiceDS {
   }) async {
     try {
       await firebaseFirestoreManager.addFood(food: food);
-      return Right(null);
+      return const Right(null);
     } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
@@ -52,25 +52,10 @@ class AddInvoiceDSImpl implements AddInvoiceDS {
     required FoodModel food,
   }) async {
     try {
-      await firebaseFirestoreManager.updateFood(
-       food
-      );
-      return Right(null);
+      await firebaseFirestoreManager.updateFood(food);
+      return const Right(null);
     } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
   }
-
-  @override
-  Future<Either<FirebaseRemoteError, void>> addDispensingItemsToCanteen({
-    required DispensingItemsModel dispensingItems,
-  }) async{
-   try{
-     await firebaseFirestoreManager.addDispensingItemsToCanteen(dispensingItems: dispensingItems);
-     return Right(null);
-   }catch(e){
-     return Left(FirebaseRemoteError(error: e.toString()));
-   }
-  }
-
 }
