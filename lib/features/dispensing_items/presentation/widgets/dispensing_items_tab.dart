@@ -397,6 +397,7 @@ class DispensingItemsTab extends StatelessWidget {
                     BlocBuilder<DispensingItemCubit, DispensingItemState>(
                       builder: (context, state) {
                         return Expanded(
+                          flex: 3,
                           child: CustomDropdown<FoodModel>(
                             validator: (p0) {
                               if (p0 == null) {
@@ -440,6 +441,7 @@ class DispensingItemsTab extends StatelessWidget {
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
+                      flex: 2,
                       child: TextFormField(
                         controller: quantityController,
                         validator: (value) {
