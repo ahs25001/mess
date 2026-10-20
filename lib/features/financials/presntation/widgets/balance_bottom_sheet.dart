@@ -137,7 +137,7 @@ class BalanceBottomSheet extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      e.amount.toString(),
+                      e.amount.ceil().toString(),
                       style: TextStyle(
                         fontSize: 14.sp,
                       ),
@@ -146,7 +146,7 @@ class BalanceBottomSheet extends StatelessWidget {
                   ),   Expanded(
                     flex: 1,
                     child: Text(
-                      "${capital-e.amount}",
+                      "${(capital-e.amount).floor()}",
                       style: TextStyle(
                         fontSize: 14.sp,
                       ),

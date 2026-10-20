@@ -164,6 +164,7 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
                     ),
                     Expanded(
                       child: TabBarView(
+                        physics: NeverScrollableScrollPhysics(),
                         controller: tabController,
                         children: [
                           DispensingItemsTab(

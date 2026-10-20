@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../core/models/ivoice_model.dart';
 import '../../features/add_new_invoice/presentation/pages/add_new_invoice_screen.dart';
 import '../../features/adding_officers/presentation/pages/add_new_officer_screen.dart';
 import '../../features/dispensing_items/presentation/pages/dispensing_items_screen.dart';
 import '../../features/financials/presntation/pages/financials_screen.dart';
 import '../../features/home/presntation/pages/home_screen.dart';
+import '../../features/invoices/presentaion/pages/invoice_details_screen.dart';
+import '../../features/invoices/presentaion/pages/invoices_screen.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -12,6 +15,8 @@ class AppRoutes {
   static const String addNewOfficer = '/add_new_officer';
   static const String financials = '/financials';
   static const String dispensingItems = '/dispensing_items';
+  static const String invoices = '/invoices';
+  static const String invoiceDetails = '/invoice_details';
 }
 class Routes {
   static Route onGenerateRoute(RouteSettings settings){
@@ -32,6 +37,10 @@ class Routes {
         return MaterialPageRoute(builder:  (context) => const AddNewOfficerScreen(),);
         case AppRoutes.financials:
         return MaterialPageRoute(builder:  (context) => const FinancialsScreen(),);
+        case AppRoutes.invoices:
+        return MaterialPageRoute(builder:  (context) => const InvoicesScreen(),);
+        case AppRoutes.invoiceDetails:
+        return MaterialPageRoute(builder:  (context) =>  InvoiceDetailsScreen(invoice: settings.arguments as InvoiceModel,),);
         default:
         return MaterialPageRoute(
           builder: (context) => const ErrorScreen(),
