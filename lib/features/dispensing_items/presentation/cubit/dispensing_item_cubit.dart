@@ -412,7 +412,6 @@ void saveComboMeal() async{
     var result = await repo.getOfficers();
     result.fold(
       (l) {
-        print('fffffffffffffffffffffffffffffffff');
         emit(
           state.copyWith(
             massage: l.error,
@@ -421,8 +420,6 @@ void saveComboMeal() async{
         );
       },
       (r) {
-        print('sssssssssssssssssssssssssssssss');
-
         emit(
           state.copyWith(
             dispensingItemStatus: DispensingItemStatus.getOfficersSuccess,

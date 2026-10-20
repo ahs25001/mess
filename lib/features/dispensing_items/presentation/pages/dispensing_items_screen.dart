@@ -37,6 +37,7 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
             create: (context) => DispensingItemCubit(),
             child: BlocConsumer<DispensingItemCubit, DispensingItemState>(
               listener: (context, state) {
+                print(state.dispensingItemStatus);
                 if (state.dispensingItemStatus ==
                         DispensingItemStatus.getOfficersError ||
                     state.dispensingItemStatus ==
@@ -168,6 +169,7 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
                         controller: tabController,
                         children: [
                           DispensingItemsTab(
+                            selectedOfficer: state.selectedOfficer,
                             onSave: () {
                               if (((state.items?.isNotEmpty) ?? false) &&
                                   (((state.dispensingItemsTabType !=

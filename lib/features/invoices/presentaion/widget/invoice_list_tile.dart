@@ -27,7 +27,7 @@ class InvoiceListTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.list,size: 25.sp,color: AppColors.primary,),
+            Icon(Icons.list_alt,size: 25.sp,color: AppColors.primary,),
             SizedBox(width: 10,),
             Column(
               spacing: 10.h,
