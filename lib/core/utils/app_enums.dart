@@ -24,4 +24,7 @@ enum HomeStatus {
   setCapitalLoading,
   setCapitalSuccess,
   setCapitalFailure,
+  getFoodLoading,
+  getFoodSuccess,
+  getFoodFailure,
 }

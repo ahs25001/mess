@@ -137,9 +137,21 @@ class InvoiceDetailsScreen extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          ((invoice?.items[index].price ?? 0) /
-                                  (invoice?.items[index].quantity ?? 1))
-                              .toString(),
+                          (invoice
+                                      ?.items[index]
+                                      .food
+                                      ?.isFixedMiscellaneousExpenses ??
+                                  false)
+                              ? 'نثريات ثابتة'
+                              : (invoice
+                                        ?.items[index]
+                                        .food
+                                        ?.isVariableMiscellaneousExpenses ??
+                                    false)
+                              ? 'نثريات متغيرة'
+                              : ((invoice?.items[index].price ?? 0) /
+                                        (invoice?.items[index].quantity ?? 1))
+                                    .toString(),
                           style: TextStyle(fontSize: 14.sp),
                           textAlign: TextAlign.center,
                           maxLines: 1,

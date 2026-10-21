@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/widgets/custom_list_tile.dart';
-
 import '../../../../config/routes/app_routes.dart';
-
 class ArchiveTab extends StatelessWidget {
   const ArchiveTab({super.key});
 
@@ -32,7 +30,7 @@ class ArchiveTab extends StatelessWidget {
           title: 'جرد الاصناف',
           animatedIconPath: 'assets/json/Shopping Bag Lottie Animation.json',
           onTab: () {
-
+            Navigator.pushNamed(context, AppRoutes.inventoryOfItems );
           },
         ),
         SizedBox(height: 10.h),
