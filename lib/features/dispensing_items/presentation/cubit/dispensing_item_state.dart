@@ -51,9 +51,8 @@ class DispensingItemState {
     FoodModel? selectedFood,
   }) => DispensingItemState(
     items: items ?? this.items,
-    // comboMealItems: comboMealItems ?? this.comboMealItems,
     selectedOfficers: selectedOfficers ?? this.selectedOfficers,
-    selectedOfficer: selectedOfficer ,
+    selectedOfficer: selectedOfficer??this.selectedOfficer ,
     selectedFood: selectedFood,
     availableFoods: availableFoods ?? this.availableFoods,
     officers: officers ?? this.officers,

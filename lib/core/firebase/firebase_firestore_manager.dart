@@ -12,11 +12,24 @@ class FirebaseFirestoreManager {
     await doc.set(invoice.toJson());
   }
 
+  Future<QuerySnapshot<InvoiceModel>> getInvoices() async {
+    var docs = await _firebaseFirestore
+        .collection("Invoices")
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              InvoiceModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        ).orderBy('date',descending: true)
+        .get();
+    return docs;
+  }
+
   Future<void> addFood({required FoodModel food}) async {
     var doc = _firebaseFirestore.collection("Food").doc();
     food.id = doc.id;
     await doc.set(food.toJson());
   }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllFood() {
     return _firebaseFirestore.collection("Food").snapshots();
   }
@@ -25,32 +38,50 @@ class FirebaseFirestoreManager {
     return await _firebaseFirestore
         .collection("Food")
         .where('isVariableMiscellaneousExpenses', isEqualTo: false)
-        .where('isFixedMiscellaneousExpenses', isEqualTo: false).where('quantity',isNotEqualTo: 0)
+        .where('isFixedMiscellaneousExpenses', isEqualTo: false)
+        .where('quantity', isNotEqualTo: 0)
         .get();
   }
-  Future<void> updateFood(FoodModel? food)async{
+
+  Future<void> updateFood(FoodModel? food) async {
     await _firebaseFirestore
         .collection("Food")
         .doc(food?.id)
         .update(food?.toJson() ?? {});
   }
-  Future<void>addDispensingItemsToOfficer({required DispensingItemsModel dispensingItems}) async {
+
+  Future<void> addDispensingItemsToOfficer({
+    required DispensingItemsModel dispensingItems,
+  }) async {
     var doc = _firebaseFirestore.collection("DispensingItemsToOfficer").doc();
     dispensingItems.id = doc.id;
     await doc.set(dispensingItems.toJson());
-  } Future<void>addDispensingItemsToCanteen({required DispensingItemsModel dispensingItems}) async {
+  }
+
+  Future<void> addDispensingItemsToCanteen({
+    required DispensingItemsModel dispensingItems,
+  }) async {
     var doc = _firebaseFirestore.collection("DispensingItemsToCanteen").doc();
     dispensingItems.id = doc.id;
     await doc.set(dispensingItems.toJson());
-  } Future<void>addDispensingItemsToHospitality({required DispensingItemsModel dispensingItems}) async {
+  }
+
+  Future<void> addDispensingItemsToHospitality({
+    required DispensingItemsModel dispensingItems,
+  }) async {
     var doc = _firebaseFirestore.collection("Hospitality").doc();
     dispensingItems.id = doc.id;
     await doc.set(dispensingItems.toJson());
-  } Future<void>addDispensingItemsToHarmony({required DispensingItemsModel dispensingItems}) async {
+  }
+
+  Future<void> addDispensingItemsToHarmony({
+    required DispensingItemsModel dispensingItems,
+  }) async {
     var doc = _firebaseFirestore.collection("Harmony").doc();
     dispensingItems.id = doc.id;
     await doc.set(dispensingItems.toJson());
   }
+
   Future<void> addOfficer({required OfficerModel officer}) async {
     var doc = _firebaseFirestore.collection("Officers").doc();
     officer.id = doc.id;

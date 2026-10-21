@@ -15,6 +15,7 @@ class DispensingItemsTab extends StatelessWidget {
   final List<OfficerModel>? officers;
   final List<DispensingItemsModel> items;
   final Function(int index) onDelete;
+  final OfficerModel? selectedOfficer;
   final TextEditingController quantityController;
   final ScrollController scrollController;
   final Function(String? value) addItemValidator;
@@ -30,6 +31,7 @@ class DispensingItemsTab extends StatelessWidget {
   const DispensingItemsTab({
     super.key,
     required this.selectOfficer,
+    required this.selectedOfficer,
     required this.onSave,
     required this.dispensingItemsTabType,
     required this.fromKey,
@@ -190,6 +192,7 @@ class DispensingItemsTab extends StatelessWidget {
                       DispensingItemsTabType.isOfficer =>
                         CustomDropdown<OfficerModel>(
                           hintText: 'إختر الضابط',
+                          initialItem: selectedOfficer,
                           headerBuilder: (context, officer, enabled) => Text(
                             "${officer.rank} ${officer.name}",
                             style: TextStyle(
@@ -354,6 +357,7 @@ class DispensingItemsTab extends StatelessWidget {
           ),
         ),
         Container(
+          margin: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
           padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(

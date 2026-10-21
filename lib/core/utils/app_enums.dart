@@ -2,6 +2,7 @@ enum HeroTags {
   addNewInvoice("add_new_invoice"),
   addNewOfficer("addNewOfficer"),
   financials("financials"),
+  invoices("invoices"),
   disburse("disburse");
 
   final String value;
@@ -23,4 +24,7 @@ enum HomeStatus {
   setCapitalLoading,
   setCapitalSuccess,
   setCapitalFailure,
+  getFoodLoading,
+  getFoodSuccess,
+  getFoodFailure,
 }

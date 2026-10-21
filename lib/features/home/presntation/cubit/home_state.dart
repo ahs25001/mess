@@ -3,9 +3,11 @@ class HomeState {
   HomeStatus? status;
   int? currentIndex;
   String ? errorMessage;
-  HomeState({this.status, this.currentIndex,this.errorMessage});
-  HomeState copyWith({HomeStatus? status,String ? errorMessage, int? currentIndex}) => HomeState(
+  List<FoodModel?>? food;
+  HomeState({this.status, this.currentIndex,this.errorMessage,this.food});
+  HomeState copyWith({HomeStatus? status,String ? errorMessage, int? currentIndex,List<FoodModel?>? food}) => HomeState(
     status: status ?? this.status,
+    food: food ?? this.food,
     errorMessage: errorMessage??this.errorMessage,
     currentIndex: currentIndex ?? this.currentIndex,
   );
