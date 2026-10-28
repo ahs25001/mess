@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/utils/app_colors.dart';
 import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/core/widgets/custom_app_bar.dart';
-import 'package:mess_app/features/dispensing_items/presentation/cubit/dispensing_item_cubit.dart';
+import 'package:mess_app/features/dispensing_items/presentation/cubit/dispensing_item_cubit.dart' hide DispensingItemStatus;
 import '../widgets/combo_meal_tab.dart';
 import '../widgets/dispensing_items_tab.dart';
 

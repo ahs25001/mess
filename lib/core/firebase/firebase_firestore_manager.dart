@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mess_app/core/models/food_model.dart';
-import 'package:mess_app/core/models/ivoice_model.dart';
+import 'package:mess_app/core/models/invoice_model.dart';
 import '../../features/dispensing_items/data/models/dispensing_items_model.dart';
+import '../models/month_end_closing_history_model.dart';
 import '../models/officer_model.dart';
 
 class FirebaseFirestoreManager {
@@ -19,9 +20,25 @@ class FirebaseFirestoreManager {
           fromFirestore: (snapshot, options) =>
               InvoiceModel.fromJson(snapshot.data()!),
           toFirestore: (value, options) => value.toJson(),
-        ).orderBy('date',descending: true)
+        )
+        .orderBy('date', descending: true)
         .get();
     return docs;
+  }
+
+  Future<void> deleteAllInvoices() async {
+    var docs = await _firebaseFirestore
+        .collection("Invoices")
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              InvoiceModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get();
+    List<InvoiceModel> invoices = docs.docs.map((e) => e.data()).toList();
+    for (InvoiceModel invoice in invoices) {
+      await _firebaseFirestore.collection("Invoices").doc(invoice.id).delete();
+    }
   }
 
   Future<void> addFood({required FoodModel food}) async {
@@ -74,12 +91,53 @@ class FirebaseFirestoreManager {
     await doc.set(dispensingItems.toJson());
   }
 
+  Future<QuerySnapshot<DispensingItemsModel>> getHospitality() async {
+    var data = await _firebaseFirestore
+        .collection("Hospitality")
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              DispensingItemsModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get();
+    return data;
+  }
+
+  Future<QuerySnapshot<DispensingItemsModel>> getCanteen() async {
+    var data = await _firebaseFirestore
+        .collection("DispensingItemsToCanteen")
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              DispensingItemsModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get();
+    return data;
+  }
+
   Future<void> addDispensingItemsToHarmony({
     required DispensingItemsModel dispensingItems,
   }) async {
     var doc = _firebaseFirestore.collection("Harmony").doc();
     dispensingItems.id = doc.id;
     await doc.set(dispensingItems.toJson());
+  }
+
+  Future<List<DispensingItemsModel>> getPerishes() async {
+    var doc = await _firebaseFirestore
+        .collection("Harmony")
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              DispensingItemsModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get();
+    List<DispensingItemsModel> items = doc.docs.map((e) => e.data()).toList();
+    return items;
+  }
+
+  Future<void> deletePerishes({required String docId}) async {
+    await _firebaseFirestore.collection("Harmony").doc(docId).delete();
   }
 
   Future<void> addOfficer({required OfficerModel officer}) async {
@@ -110,5 +168,21 @@ class FirebaseFirestoreManager {
     required String docId,
   }) async {
     return await _firebaseFirestore.collection("Officers").doc(docId).get();
+  }
+
+  Future<void> addMonthEndClosingHistory({
+    required MonthEndClosingHistoryModel monthEndClosingHistoryModel,
+  }) async {
+    var doc = _firebaseFirestore.collection("MonthEndClosingHistory").doc();
+    monthEndClosingHistoryModel.id = doc.id;
+    await doc.set(monthEndClosingHistoryModel.toJson());
+  }
+
+  Future<MonthEndClosingHistoryModel> getMonthEndClosingHistory() async {
+    var data = await _firebaseFirestore
+        .collection("MonthEndClosingHistory")
+        .doc()
+        .get();
+    return MonthEndClosingHistoryModel.fromJson(data.data()!);
   }
 }

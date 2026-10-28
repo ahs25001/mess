@@ -116,7 +116,7 @@ class BalanceBottomSheet extends StatelessWidget {
                     flex: 2,
                     child: Center(
                       child: Text(
-                        e.name ,
+                        '${e.rank} ${e.name}' ,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14.sp,
@@ -146,7 +146,7 @@ class BalanceBottomSheet extends StatelessWidget {
                   ),   Expanded(
                     flex: 1,
                     child: Text(
-                      "${(capital-e.amount).ceil()}",
+                      "${(e.consumer).ceil()}",
                       style: TextStyle(
                         fontSize: 14.sp,
                       ),

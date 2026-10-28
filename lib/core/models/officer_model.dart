@@ -5,9 +5,10 @@ class OfficerModel {
   String phone;
   num militaryIDNumber;
   num amount;
-
+  num consumer;
   OfficerModel({
     required this.id,
+    required this.consumer,
     required this.amount,
     required this.name,
     required this.rank,
@@ -16,21 +17,23 @@ class OfficerModel {
   });
 
   OfficerModel.fromJson(Map<String, dynamic> json)
-      : this(
-          id: json['id'] ?? '',
-          name: json['name'] ?? '',
-          rank: json['rank'] ?? '',
-          phone: json['phone'] ?? '',
-          amount: (json['amount'] as num?) ?? 0,
-          militaryIDNumber: (json['militaryIDNumber'] as num?) ?? 0,
-        );
+    : this(
+        id: json['id'] ?? '',
+        consumer: json['consumer'],
+        name: json['name'] ?? '',
+        rank: json['rank'] ?? '',
+        phone: json['phone'] ?? '',
+        amount: (json['amount'] as num?) ?? 0,
+        militaryIDNumber: (json['militaryIDNumber'] as num?) ?? 0,
+      );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'rank': rank,
-        'amount': amount,
-        'phone': phone,
-        'militaryIDNumber': militaryIDNumber,
-      };
+    'id': id,
+    'name': name,
+    'consumer': consumer,
+    'rank': rank,
+    'amount': amount,
+    'phone': phone,
+    'militaryIDNumber': militaryIDNumber,
+  };
 }
