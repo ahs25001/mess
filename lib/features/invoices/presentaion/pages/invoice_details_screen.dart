@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/widgets/custom_app_bar.dart';
 
-import '../../../../core/models/ivoice_model.dart';
+import '../../../../core/models/invoice_model.dart';
 import '../../../../core/utils/app_colors.dart';
 
 class InvoiceDetailsScreen extends StatelessWidget {
@@ -129,8 +129,9 @@ class InvoiceDetailsScreen extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          invoice?.items[index].price.toString() ?? '0',
+                          invoice?.items[index].price.ceil().toString() ?? '0',
                           style: TextStyle(fontSize: 14.sp),
+                          maxLines: 1,
                           textAlign: TextAlign.center,
                         ),
                       ),

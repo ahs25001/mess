@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/utils/app_colors.dart';
 import 'package:mess_app/core/utils/app_constants.dart';
-import 'package:mess_app/features/adding_officers/presentation/cubit/add_new_officer_cubit.dart';
+import 'package:mess_app/features/adding_officers/presentation/cubit/add_new_officer_cubit.dart' hide AddNewOfficerStateStatus;
 import 'package:mess_app/features/adding_officers/presentation/widgets/custom_officer_text_field_data.dart';
 
 import '../../../../core/utils/app_enums.dart';

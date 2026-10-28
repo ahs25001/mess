@@ -1,14 +1,10 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mess_app/core/models/food_model.dart';
 import 'package:mess_app/core/models/officer_model.dart';
 import 'package:mess_app/core/utils/app_enums.dart';
-// import 'package:mess_app/features/dispensing_items/data/models/combo_meal_item_model.dart';
 import 'package:mess_app/features/dispensing_items/data/models/dispensing_items_model.dart';
 import 'package:mess_app/features/dispensing_items/domain/repositories/dispensing_items_repo.dart';
-
 import '../../../../core/firebase/firebase_firestore_manager.dart';
 import '../../data/data_source/dispensing_items_ds_impl.dart';
 import '../../data/repositories/dispensing_items_repo_impl.dart';
@@ -94,7 +90,8 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
             (state.selectedFood?.prices[index].price ?? 0.0) *
             state.selectedFood?.prices[index].quantity;
         quantity = quantity - state.selectedFood?.prices[index].quantity;
-        state.selectedFood?.quantity -= state.selectedFood?.prices[index].quantity;
+        state.selectedFood?.quantity -=
+            state.selectedFood?.prices[index].quantity;
         state.selectedFood?.prices.removeAt(index);
       }
     }
@@ -245,6 +242,7 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
           }
         }
         selectedOfficer.amount = selectedOfficer.amount - totalPrice;
+        selectedOfficer.consumer = selectedOfficer.consumer + totalPrice;
         var result = await repo.updateOfficer(selectedOfficer);
         result.fold((l) {
           emit(
@@ -388,6 +386,7 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
     totalPrice = totalPrice / state.selectedOfficers!.length;
     for (OfficerModel officer in state.selectedOfficers ?? []) {
       officer.amount = officer.amount - totalPrice;
+      officer.consumer = officer.consumer + totalPrice;
       var result = await repo.updateOfficer(officer);
       result.fold((l) {
         emit(
