@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../../../core/models/ivoice_model.dart';
+import '../../../../core/models/invoice_model.dart';
 import '../../../../../../../core/utils/app_colors.dart';
 import '../../../../config/routes/app_routes.dart';
 
@@ -45,7 +45,7 @@ class InvoiceListTile extends StatelessWidget {
               ],
             ),
             Spacer(),
-            Text('${invoice?.total.toString()??0} جنية',style: TextStyle(
+            Text('${invoice?.total.ceil().toString()??0} جنية',style: TextStyle(
               color: AppColors.primary,
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,

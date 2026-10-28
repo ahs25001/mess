@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mess_app/core/errors/firebase_errors.dart';
 import 'package:mess_app/core/models/food_model.dart';
 
-import 'package:mess_app/core/models/ivoice_model.dart';
+import 'package:mess_app/core/models/invoice_model.dart';
 
 import '../../../../core/firebase/firebase_firestore_manager.dart';
 import 'add_invoice_ds.dart';

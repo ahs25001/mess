@@ -6,6 +6,7 @@ import 'package:mess_app/features/adding_officers/domain/repositories/add_new_of
 
 import '../../../../core/models/officer_model.dart';
 import '../../../../core/utils/app_constants.dart';
+import '../../../../core/utils/app_enums.dart';
 import '../../data/repositories/add_new_officer_repo_impl.dart';
 part 'add_new_officer_state.dart';
 
@@ -28,9 +29,9 @@ class AddNewOfficerCubit extends Cubit<AddNewOfficerState> {
     AddNewOfficerRepo addNewOfficerRepo = AddNewOfficerRepoImpl(
       AddNewOfficerDsImpl(FirebaseFirestoreManager()),
     );
-    print("Selected rank in add ${state.selectedRank}");
     var result = await addNewOfficerRepo.addNewOfficer(
       OfficerModel(
+        consumer: 0,
         id: "",
         amount: 0,
         militaryIDNumber: int.tryParse(militaryIDNumberController.text) ?? 0,

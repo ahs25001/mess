@@ -1,20 +1,4 @@
 part of 'dispensing_item_cubit.dart';
-
-enum DispensingItemStatus {
-  init,
-  success,
-  error,
-  getOfficersLoading,
-  getOfficersSuccess,
-  getOfficersError,
-  getAvailableFoodsLoading,
-  getAvailableFoodsSuccess,
-  getAvailableFoodsError,
-  saveDispensingItemsLoading,
-  saveDispensingItemsSuccess,
-  saveDispensingItemsError,
-}
-
 class DispensingItemState {
   final DispensingItemStatus? dispensingItemStatus;
   final DispensingItemsTabType? dispensingItemsTabType;

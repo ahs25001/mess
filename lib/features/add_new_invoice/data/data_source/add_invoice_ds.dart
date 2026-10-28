@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mess_app/core/errors/firebase_errors.dart';
 
 import '../../../../core/models/food_model.dart';
-import '../../../../core/models/ivoice_model.dart';
+import '../../../../core/models/invoice_model.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class AddInvoiceDS {
