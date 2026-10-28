@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mess_app/core/errors/firebase_errors.dart';
 import 'package:mess_app/core/models/food_model.dart';
 
-import 'package:mess_app/core/models/ivoice_model.dart';
+import 'package:mess_app/core/models/invoice_model.dart';
 import 'package:mess_app/features/dispensing_items/data/models/dispensing_items_model.dart';
 
 import '../../domain/repositories/add_invoice_repository.dart';

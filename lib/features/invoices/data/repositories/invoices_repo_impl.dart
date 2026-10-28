@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:mess_app/features/invoices/domain/repositories/invoices_repo.dart';
 
 import '../../../../core/errors/firebase_errors.dart';
-import '../../../../core/models/ivoice_model.dart';
+import '../../../../core/models/invoice_model.dart';
 import '../data_source/invoices_ds.dart';
 
 class InvoicesRepoImpl implements InvoicesRepo{

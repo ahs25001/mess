@@ -1,6 +1,5 @@
 part of 'add_new_officer_cubit.dart';
 
-enum AddNewOfficerStateStatus { initial, loading, success, failure }
 
 class AddNewOfficerState {
   String? message;

@@ -8,8 +8,9 @@ import 'package:mess_app/features/add_new_invoice/domain/repositories/add_invoic
 
 import '../../../../core/models/food_model.dart';
 import '../../../../core/models/invoice_item_model.dart';
-import '../../../../core/models/ivoice_model.dart';
+import '../../../../core/models/invoice_model.dart';
 import '../../../../core/models/price_model.dart';
+import '../../../../core/utils/app_enums.dart';
 
 part 'add_new_invoice_state.dart';
 

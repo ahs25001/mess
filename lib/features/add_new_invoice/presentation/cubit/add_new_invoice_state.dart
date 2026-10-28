@@ -1,17 +1,5 @@
 part of 'add_new_invoice_cubit.dart';
 
-enum AddNewInvoiceStatus {
-  initial,
-  addInvoiceLoading,
-  addInvoiceSuccess,
-  addInvoiceFailure,
-  addFoodLoading,
-  addFoodSuccess,
-  addFoodFailure,
-  getFoodLoading,
-  getFoodSuccess,
-  getFoodFailure,
-}
 
 class AddNewInvoiceState {
   AddNewInvoiceStatus? status;

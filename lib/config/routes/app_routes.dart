@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
-import '../../core/models/food_model.dart';
-import '../../core/models/ivoice_model.dart';
+import '../../core/models/invoice_model.dart';
 import '../../features/add_new_invoice/presentation/pages/add_new_invoice_screen.dart';
 import '../../features/adding_officers/presentation/pages/add_new_officer_screen.dart';
 import '../../features/dispensing_items/presentation/pages/dispensing_items_screen.dart';
 import '../../features/financials/presntation/pages/financials_screen.dart';
+import '../../features/financials/presntation/pages/month_end_closing_screen.dart';
 import '../../features/home/presntation/pages/home_screen.dart';
 import '../../features/home/presntation/pages/inventory_of_items_screen.dart';
 import '../../features/invoices/presentaion/pages/invoice_details_screen.dart';
@@ -20,6 +19,7 @@ class AppRoutes {
   static const String dispensingItems = '/dispensing_items';
   static const String invoices = '/invoices';
   static const String invoiceDetails = '/invoice_details';
+  static const String monthEndClosing = '/month_end_closing';
 }
 class Routes {
   static Route onGenerateRoute(RouteSettings settings){
@@ -46,6 +46,8 @@ class Routes {
         return MaterialPageRoute(builder:  (context) =>  InvoiceDetailsScreen(invoice: settings.arguments as InvoiceModel,),);
         case AppRoutes.inventoryOfItems:
         return MaterialPageRoute(builder:  (context) => const InventoryOfItemsScreen(),);
+        case AppRoutes.monthEndClosing:
+        return MaterialPageRoute(builder:  (context) => const MonthEndClosingScreen(),);
         default:
         return MaterialPageRoute(
           builder: (context) => const ErrorScreen(),
