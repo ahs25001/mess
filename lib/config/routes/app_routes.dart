@@ -10,6 +10,7 @@ import '../../features/financials/presntation/pages/financials_screen.dart';
 import '../../features/financials/presntation/pages/month_end_closing_screen.dart';
 import '../../features/home/presntation/pages/home_screen.dart';
 import '../../features/home/presntation/pages/inventory_of_items_screen.dart';
+import '../../features/home/presntation/pages/update_officer_screen.dart';
 import '../../features/invoices/presentaion/pages/invoice_details_screen.dart';
 import '../../features/invoices/presentaion/pages/invoices_screen.dart';
 
@@ -25,6 +26,7 @@ class AppRoutes {
   static const String monthEndClosing = '/month_end_closing';
   static const String closingOutTheMonths = '/closing_out_the_months';
   static const String closingOutTheMonthsDetails = '/closingOutTheMonthsDetails';
+static const String updateOfficerScreen = '/update_officer_screen';
 }
 class Routes {
   static Route onGenerateRoute(RouteSettings settings){
@@ -57,6 +59,8 @@ class Routes {
         return MaterialPageRoute(builder:  (context) => const ClosingOutTheMonthsScreen(),);
         case AppRoutes.closingOutTheMonthsDetails:
         return MaterialPageRoute(builder:  (context) =>  ClosingOutTheMonthsDetailsScreen(monthEndClosingHistoryModel: settings.arguments as MonthEndClosingHistoryModel,),);
+       case AppRoutes.updateOfficerScreen:
+        return MaterialPageRoute(builder:  (context) => const UpdateOfficerScreen(),);
         default:
         return MaterialPageRoute(
           builder: (context) => const ErrorScreen(),

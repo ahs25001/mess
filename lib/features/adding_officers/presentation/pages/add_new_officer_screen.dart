@@ -4,11 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/utils/app_colors.dart';
 import 'package:mess_app/core/utils/app_constants.dart';
-import 'package:mess_app/features/adding_officers/presentation/cubit/add_new_officer_cubit.dart' hide AddNewOfficerStateStatus;
-import 'package:mess_app/features/adding_officers/presentation/widgets/custom_officer_text_field_data.dart';
-
+import 'package:mess_app/features/adding_officers/presentation/cubit/add_new_officer_cubit.dart';
 import '../../../../core/utils/app_enums.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../../../core/widgets/custom_officer_text_field_data.dart';
 
 class AddNewOfficerScreen extends StatelessWidget {
   const AddNewOfficerScreen({super.key});
@@ -20,7 +19,6 @@ class AddNewOfficerScreen extends StatelessWidget {
       child: Scaffold(
         body: BlocConsumer<AddNewOfficerCubit, AddNewOfficerState>(
           listener: (context, state) {
-            print (state.status);
             if (state.status == AddNewOfficerStateStatus.success) {
               Navigator.pop(context); // Dismiss loading dialog
               ScaffoldMessenger.of(context).showSnackBar(
