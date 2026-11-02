@@ -179,11 +179,16 @@ class FirebaseFirestoreManager {
     doc.set(monthEndClosingHistoryModel.toJson());
   }
 
-  Future<MonthEndClosingHistoryModel> getMonthEndClosingHistory() async {
+  Future<List<MonthEndClosingHistoryModel>> getMonthEndClosingHistory() async {
     var data = await _firebaseFirestore
         .collection("MonthEndClosingHistory")
-        .doc()
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              MonthEndClosingHistoryModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
         .get();
-    return MonthEndClosingHistoryModel.fromJson(data.data()!);
+    var result = data.docs.map((e) => e.data()).toList();
+    return result;
   }
 }

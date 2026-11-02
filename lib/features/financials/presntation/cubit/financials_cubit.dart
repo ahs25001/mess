@@ -411,7 +411,7 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         date: Timestamp.fromDate(DateTime.now()),
         canteenBalance: state.monthEndClosing?.canteen ?? 0,
         monthEndClosingHospitalityModel: MonthEndClosingHospitalityModel(
-          fixed: state.monthEndClosing?.fixed ?? 0,
+          variable: state.monthEndClosing?.fixed ?? 0,
           consumer: state.monthEndClosing?.hospitality ?? 0,
           total: hospitalityTotal,
         ),

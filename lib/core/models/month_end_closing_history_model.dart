@@ -34,7 +34,7 @@ class MonthEndClosingHistoryModel {
                       json['monthEndClosingHospitalityModel']
                           as Map<String, dynamic>)
                   : MonthEndClosingHospitalityModel(
-                      fixed: 0,
+                      variable: 0,
                       consumer: 0,
                       total: 0,
                     ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mess_app/core/models/month_end_closing_history_model.dart';
 import '../../core/models/invoice_model.dart';
 import '../../features/add_new_invoice/presentation/pages/add_new_invoice_screen.dart';
 import '../../features/adding_officers/presentation/pages/add_new_officer_screen.dart';
+import '../../features/closing_out_the_months/presentation/pages/closing_out_the_months_details_screen.dart';
 import '../../features/closing_out_the_months/presentation/pages/closing_out_the_months_screen.dart';
 import '../../features/dispensing_items/presentation/pages/dispensing_items_screen.dart';
 import '../../features/financials/presntation/pages/financials_screen.dart';
@@ -22,6 +24,7 @@ class AppRoutes {
   static const String invoiceDetails = '/invoice_details';
   static const String monthEndClosing = '/month_end_closing';
   static const String closingOutTheMonths = '/closing_out_the_months';
+  static const String closingOutTheMonthsDetails = '/closingOutTheMonthsDetails';
 }
 class Routes {
   static Route onGenerateRoute(RouteSettings settings){
@@ -52,6 +55,8 @@ class Routes {
         return MaterialPageRoute(builder:  (context) => const MonthEndClosingScreen(),);
         case AppRoutes.closingOutTheMonths:
         return MaterialPageRoute(builder:  (context) => const ClosingOutTheMonthsScreen(),);
+        case AppRoutes.closingOutTheMonthsDetails:
+        return MaterialPageRoute(builder:  (context) =>  ClosingOutTheMonthsDetailsScreen(monthEndClosingHistoryModel: settings.arguments as MonthEndClosingHistoryModel,),);
         default:
         return MaterialPageRoute(
           builder: (context) => const ErrorScreen(),
