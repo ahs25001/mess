@@ -20,7 +20,6 @@ class AddNewOfficerCubit extends Cubit<AddNewOfficerState> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void selectedRank(String rank) {
-    print("Selected rank in change $rank");
     emit(state.copyWith(selectedRank: rank, status: AddNewOfficerStateStatus.initial));
   }
 
@@ -53,6 +52,7 @@ class AddNewOfficerCubit extends Cubit<AddNewOfficerState> {
         nameController.clear();
         militaryIDNumberController.clear();
         phoneController.clear();
+        print('ssssssssssssss');
         emit(state.copyWith(status: AddNewOfficerStateStatus.success));
       },
     );

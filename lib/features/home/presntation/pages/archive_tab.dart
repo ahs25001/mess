@@ -22,7 +22,7 @@ class ArchiveTab extends StatelessWidget {
           title: 'تقفيلات الشهور',
           animatedIconPath: 'assets/json/Files.json',
           onTab: () {
-
+            Navigator.pushNamed(context, AppRoutes.closingOutTheMonths);
           },
         ),
         SizedBox(height: 10.h),

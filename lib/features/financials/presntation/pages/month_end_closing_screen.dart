@@ -9,6 +9,13 @@ import 'package:mess_app/features/financials/presntation/cubit/financials_cubit.
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_enums.dart';
 
+extension SafeNum on num? {
+  int safeCeil() {
+    if (this == null || this!.isNaN || this!.isInfinite) return 0;
+    return this!.ceil();
+  }
+}
+
 class MonthEndClosingScreen extends StatelessWidget {
   const MonthEndClosingScreen({super.key});
 
@@ -22,7 +29,8 @@ class MonthEndClosingScreen extends StatelessWidget {
             CustomAppBar(title: 'تقفيل الشهر'),
             BlocConsumer<FinancialsCubit, FinancialsState>(
               listener: (context, state) {
-                if(state.status==FinancialsStatus.saveMonthEndClosingSuccess){
+                if (state.status ==
+                    FinancialsStatus.saveMonthEndClosingSuccess) {
                   Navigator.pop(context); // Dismiss loading dialog
                   Navigator.pop(context); // Dismiss bottom sheet
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -37,7 +45,8 @@ class MonthEndClosingScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                }else if(state.status==FinancialsStatus.saveMonthEndClosingLoading){
+                } else if (state.status ==
+                    FinancialsStatus.saveMonthEndClosingLoading) {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
@@ -54,7 +63,8 @@ class MonthEndClosingScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                }else if (state.status==FinancialsStatus.saveMonthEndClosingFailure){
+                } else if (state.status ==
+                    FinancialsStatus.saveMonthEndClosingFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       behavior: SnackBarBehavior.floating,
@@ -72,7 +82,9 @@ class MonthEndClosingScreen extends StatelessWidget {
               },
               builder: (context, state) {
                 if (state.status ==
-                    FinancialsStatus.createMonthEndClosingSuccess||state.status==FinancialsStatus.saveMonthEndClosingFailure) {
+                        FinancialsStatus.createMonthEndClosingSuccess ||
+                    state.status ==
+                        FinancialsStatus.saveMonthEndClosingFailure) {
                   return Expanded(
                     child: ListView(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -102,7 +114,6 @@ class MonthEndClosingScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
                               Expanded(
                                 flex: 1,
                                 child: Text(
@@ -124,7 +135,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                           final e = entry.value;
                           return Accordion(
                             disableScrolling: true,
-                            rightIcon: SizedBox(),
+                            rightIcon: const SizedBox(),
                             headerBorderColor: (index % 2 != 0)
                                 ? AppColors.borderColor
                                 : AppColors.cardBackground,
@@ -189,7 +200,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                                                                   .monthEndClosing
                                                                   ?.perishes ??
                                                               0))))
-                                              .ceil()
+                                              .safeCeil()
                                               .toString(),
                                           style: TextStyle(
                                             fontSize: 14.sp,
@@ -258,9 +269,8 @@ class MonthEndClosingScreen extends StatelessWidget {
                                         Expanded(
                                           flex: 1,
                                           child: Text(
-                                            (state.officers?[index].consumer ??
-                                                    0)
-                                                .ceil()
+                                            (state.officers?[index].consumer)
+                                                .safeCeil()
                                                 .toString(),
                                             style: TextStyle(
                                               fontSize: 14.sp,
@@ -278,7 +288,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                                                             .officers?[index]
                                                             .consumer ??
                                                         0))
-                                                .ceil()
+                                                .safeCeil()
                                                 .toString(),
                                             style: TextStyle(
                                               fontSize: 14.sp,
@@ -291,8 +301,9 @@ class MonthEndClosingScreen extends StatelessWidget {
                                           flex: 1,
                                           child: Text(
                                             state.monthEndClosing?.fixed
+                                                    .safeCeil()
                                                     .toString() ??
-                                                "",
+                                                "0",
                                             style: TextStyle(
                                               fontSize: 14.sp,
                                               color: AppColors.black,
@@ -305,9 +316,9 @@ class MonthEndClosingScreen extends StatelessWidget {
                                           flex: 1,
                                           child: Text(
                                             state.monthEndClosing?.perishes
-                                                    .ceil()
+                                                    .safeCeil()
                                                     .toString() ??
-                                                "",
+                                                "0",
                                             style: TextStyle(
                                               fontSize: 14.sp,
                                               color: AppColors.black,
@@ -349,7 +360,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                         SizedBox(height: 20.h),
                         Accordion(
                           disableScrolling: true,
-                          rightIcon: SizedBox(),
+                          rightIcon: const SizedBox(),
                           headerBorderColor: AppColors.borderColor,
                           headerBackgroundColorOpened: AppColors.borderColor,
                           headerBorderColorOpened: AppColors.borderColor,
@@ -374,7 +385,6 @@ class MonthEndClosingScreen extends StatelessWidget {
                                         child: Text(
                                           'ضيافة',
                                           textAlign: TextAlign.center,
-
                                           style: TextStyle(
                                             fontSize: 16.sp,
                                             fontWeight: FontWeight.bold,
@@ -393,7 +403,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                                                             .monthEndClosing
                                                             ?.variable ??
                                                         0)))
-                                            .ceil()
+                                            .safeCeil()
                                             .toString(),
                                         style: TextStyle(
                                           fontSize: 16.sp,
@@ -442,9 +452,9 @@ class MonthEndClosingScreen extends StatelessWidget {
                                         flex: 1,
                                         child: Text(
                                           state.monthEndClosing?.hospitality
-                                                  .ceil()
+                                                  .safeCeil()
                                                   .toString() ??
-                                              '',
+                                              '0',
                                           style: TextStyle(
                                             fontSize: 14.sp,
                                             color: AppColors.black,
@@ -461,10 +471,10 @@ class MonthEndClosingScreen extends StatelessWidget {
                                                           ?.hospitality ??
                                                       0) *
                                                   (state
-                                                              .monthEndClosing
-                                                              ?.variable ??
-                                                          0)
-                                                      .ceil())
+                                                          .monthEndClosing
+                                                          ?.variable ??
+                                                      0))
+                                              .safeCeil()
                                               .toString(),
                                           style: TextStyle(
                                             fontSize: 14.sp,
@@ -517,7 +527,9 @@ class MonthEndClosingScreen extends StatelessWidget {
                                 Expanded(
                                   flex: 1,
                                   child: Text(
-                                    state.monthEndClosing?.canteen.toString() ??
+                                    state.monthEndClosing?.canteen
+                                            .safeCeil()
+                                            .toString() ??
                                         '0',
                                     style: TextStyle(
                                       fontSize: 16.sp,
@@ -534,14 +546,13 @@ class MonthEndClosingScreen extends StatelessWidget {
                       ],
                     ),
                   );
-                }
-                else if (state.status ==
+                } else if (state.status ==
                         FinancialsStatus.createMonthEndClosingLoading ||
                     state.status == FinancialsStatus.getInvoicesLoading ||
                     state.status == FinancialsStatus.getOfficersLoading ||
                     state.status == FinancialsStatus.getPerishesLoading ||
                     state.status == FinancialsStatus.getCapitalLoading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(color: AppColors.primary),
                   );
                 } else {
@@ -603,7 +614,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                                                 40.h,
                                               ),
                                               shape: RoundedRectangleBorder(
-                                                side: BorderSide(
+                                                side: const BorderSide(
                                                   color: AppColors.red,
                                                 ),
                                                 borderRadius:
@@ -663,7 +674,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                                       );
                                     },
                                   ).zoomIn(
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeInOutBack,
                                   ),
                             ),

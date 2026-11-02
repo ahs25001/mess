@@ -99,3 +99,5 @@ enum FinancialsStatus {
 }
 
 enum InvoicesStatus { init, loading, success, failure }
+
+enum ClosingOutTheMonthsStatus { init, loading, success, failure }
