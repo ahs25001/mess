@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../features/home/presntation/pages/archive_tab.dart';
 import '../../features/home/presntation/pages/home_tab.dart';
 import '../../features/home/presntation/pages/settings_tab.dart';
 import 'app_colors.dart';
@@ -21,8 +22,6 @@ abstract class AppConstants {
   ];
   static List<Widget>tabs=[
     HomeTab(),
-    Placeholder(
-      color: AppColors.primary,
-    ),SettingsTab(),
+    ArchiveTab(),SettingsTab(),
   ];
 }

@@ -1,31 +1,19 @@
 part of 'dispensing_item_cubit.dart';
-
-enum DispensingItemStatus {
-  init,
-  success,
-  error,
-  getOfficersLoading,
-  getOfficersSuccess,
-  getOfficersError,
-  getAvailableFoodsLoading,
-  getAvailableFoodsSuccess,
-  getAvailableFoodsError,
-  saveDispensingItemsLoading,
-  saveDispensingItemsSuccess,
-  saveDispensingItemsError,
-}
-
 class DispensingItemState {
   final DispensingItemStatus? dispensingItemStatus;
   final DispensingItemsTabType? dispensingItemsTabType;
   final List<OfficerModel>? officers;
+  final List<OfficerModel>? selectedOfficers;
   final List<FoodModel>? availableFoods;
   final FoodModel? selectedFood;
   final List<DispensingItemsModel>? items;
   final String? massage;
   final OfficerModel? selectedOfficer;
+  // final List<ComboMealItemModel>?comboMealItems;
   const DispensingItemState({
     this.dispensingItemsTabType,
+    // this.comboMealItems,
+    this.selectedOfficers,
     this.selectedOfficer,
     this.items,
     this.dispensingItemStatus,
@@ -35,7 +23,9 @@ class DispensingItemState {
     this.availableFoods,
   });
   DispensingItemState copyWith({
+    // List<ComboMealItemModel>? comboMealItems,
     OfficerModel? selectedOfficer,
+    List<OfficerModel>? selectedOfficers,
     List<FoodModel>? availableFoods,
     List<DispensingItemsModel>? items,
     DispensingItemStatus? dispensingItemStatus,
@@ -45,7 +35,8 @@ class DispensingItemState {
     FoodModel? selectedFood,
   }) => DispensingItemState(
     items: items ?? this.items,
-    selectedOfficer: selectedOfficer ?? this.selectedOfficer,
+    selectedOfficers: selectedOfficers ?? this.selectedOfficers,
+    selectedOfficer: selectedOfficer??this.selectedOfficer ,
     selectedFood: selectedFood,
     availableFoods: availableFoods ?? this.availableFoods,
     officers: officers ?? this.officers,

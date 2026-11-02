@@ -17,9 +17,13 @@ class DispensingItemsDsImpl implements DispensingItemsDs {
   Future<Either<FirebaseErrors, List<OfficerModel>?>> getOfficers() async {
     try {
       var data = await _firestore.getOfficers();
-      List<OfficerModel> officers = data.docs
-          .map((e) => OfficerModel.fromJson(e.data()))
-          .toList();
+      List<OfficerModel> officers = data.docs.map((e) {
+        final json = Map<String, dynamic>.from(e.data());
+        if ((json['id'] as String?)?.isEmpty ?? true) {
+          json['id'] = e.id;
+        }
+        return OfficerModel.fromJson(json);
+      }).toList();
       return Right(officers);
     } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
@@ -42,11 +46,13 @@ class DispensingItemsDsImpl implements DispensingItemsDs {
   @override
   Future<Either<FirebaseRemoteError, void>> addDispensingItemsToHarmony({
     required DispensingItemsModel dispensingItems,
-  }) async{
-    try{
-      await _firestore.addDispensingItemsToHarmony(dispensingItems: dispensingItems);
-      return Right(null);
-    }catch(e){
+  }) async {
+    try {
+      await _firestore.addDispensingItemsToHarmony(
+        dispensingItems: dispensingItems,
+      );
+      return const Right(null);
+    } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
   }
@@ -54,11 +60,13 @@ class DispensingItemsDsImpl implements DispensingItemsDs {
   @override
   Future<Either<FirebaseRemoteError, void>> addDispensingItemsToHospitality({
     required DispensingItemsModel dispensingItems,
-  }) async{
-    try{
-      await _firestore.addDispensingItemsToHospitality(dispensingItems: dispensingItems);
-      return Right(null);
-    }catch(e){
+  }) async {
+    try {
+      await _firestore.addDispensingItemsToHospitality(
+        dispensingItems: dispensingItems,
+      );
+      return const Right(null);
+    } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
   }
@@ -66,11 +74,13 @@ class DispensingItemsDsImpl implements DispensingItemsDs {
   @override
   Future<Either<FirebaseRemoteError, void>> addDispensingItemsToOfficer({
     required DispensingItemsModel dispensingItems,
-  })async {
-    try{
-      await _firestore.addDispensingItemsToOfficer(dispensingItems: dispensingItems);
-      return Right(null);
-    }catch(e){
+  }) async {
+    try {
+      await _firestore.addDispensingItemsToOfficer(
+        dispensingItems: dispensingItems,
+      );
+      return const Right(null);
+    } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
   }
@@ -78,30 +88,35 @@ class DispensingItemsDsImpl implements DispensingItemsDs {
   @override
   Future<Either<FirebaseRemoteError, void>> addDispensingItemsToCanteen({
     required DispensingItemsModel dispensingItems,
-  }) async{
-    try{
-      await _firestore.addDispensingItemsToCanteen(dispensingItems: dispensingItems);
-      return Right(null);
-    }catch(e){
+  }) async {
+    try {
+      await _firestore.addDispensingItemsToCanteen(
+        dispensingItems: dispensingItems,
+      );
+      return const Right(null);
+    } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
   }
 
   @override
-  Future<Either<FirebaseRemoteError, void>> updateOfficer(OfficerModel officer) async{
-   try{
-    await  _firestore.updateOfficer(officer: officer);
-    return Right(null);
-   }catch(e){
-     return Left(FirebaseRemoteError(error: e.toString()));
-   }
+  Future<Either<FirebaseRemoteError, void>> updateOfficer(
+    OfficerModel officer,
+  ) async {
+    try {
+      await _firestore.updateOfficer(officer: officer);
+      return const Right(null);
+    } catch (e) {
+      return Left(FirebaseRemoteError(error: e.toString()));
+    }
   }
+
   @override
-  Future<Either<FirebaseErrors, void>> updateFood(FoodModel food)async {
-    try{
+  Future<Either<FirebaseErrors, void>> updateFood(FoodModel food) async {
+    try {
       await _firestore.updateFood(food);
-      return Right(null);
-    }catch(e){
+      return const Right(null);
+    } catch (e) {
       return Left(FirebaseRemoteError(error: e.toString()));
     }
   }

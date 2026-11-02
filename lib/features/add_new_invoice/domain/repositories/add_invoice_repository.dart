@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mess_app/core/errors/firebase_errors.dart';
-import 'package:mess_app/core/models/ivoice_model.dart';
+import 'package:mess_app/core/models/invoice_model.dart';
 
 import '../../../../core/models/food_model.dart';
 import '../../../dispensing_items/data/models/dispensing_items_model.dart';

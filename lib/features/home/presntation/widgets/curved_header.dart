@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/utils/app_colors.dart';
 
@@ -27,13 +28,22 @@ class CurvedHeader extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: AppColors.softBlue,
-                    backgroundImage: AssetImage(
-                      "assets/icons/officer_icon.png",
-                    ),
-                  ),
+              Container(
+              padding: EdgeInsets.symmetric(
+              horizontal: 10.w,
+                vertical: 8.h,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.lightBlue,
+                shape: BoxShape.circle,
+              ),
+              child: SvgPicture.asset(
+                'assets/icons/officerIcon.svg',
+                width: 40.w,
+                color: AppColors.primary,
+                height: 40.h,
+              ),
+            ),
                   SizedBox(width: 20.w),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

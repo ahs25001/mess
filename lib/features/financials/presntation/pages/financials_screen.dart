@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/features/financials/presntation/widgets/balance_bottom_sheet.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../cubit/financials_cubit.dart';
@@ -171,7 +172,9 @@ class FinancialsScreen extends StatelessWidget {
                                 'assets/json/the_remaining_amount_animated_icon.json',
                           ),
                           CustomListTile(
-                            onTab: () {},
+                            onTab: () {
+                              Navigator.pushNamed(context, AppRoutes.monthEndClosing);
+                            },
                             title: 'تقفيل الشهر',
                             animatedIconPath:
                                 'assets/json/closing_accounts_animated_icon.json',
