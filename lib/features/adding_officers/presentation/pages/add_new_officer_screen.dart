@@ -20,6 +20,7 @@ class AddNewOfficerScreen extends StatelessWidget {
       child: Scaffold(
         body: BlocConsumer<AddNewOfficerCubit, AddNewOfficerState>(
           listener: (context, state) {
+            print (state.status);
             if (state.status == AddNewOfficerStateStatus.success) {
               Navigator.pop(context); // Dismiss loading dialog
               ScaffoldMessenger.of(context).showSnackBar(
