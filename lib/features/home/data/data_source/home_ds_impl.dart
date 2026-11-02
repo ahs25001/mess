@@ -5,6 +5,7 @@ import 'package:mess_app/core/firebase/firebase_firestore_manager.dart';
 
 import '../../../../core/errors/firebase_errors.dart';
 import '../../../../core/models/food_model.dart';
+import '../../../../core/models/officer_model.dart';
 import '../../../../core/shared_preferences/shared_preferences_manager.dart';
 import 'home_ds.dart';
 
@@ -28,11 +29,39 @@ class HomeDSImpl implements HomeDS {
   @override
   Future<Either<FirebaseErrors,List<FoodModel?>>>getFood()async{
     try{
-      final result = await _firestoreManager.getFood();
+      final  result = await _firestoreManager.getFood();
       var food = result.docs.map((e) => FoodModel.fromJson(e.data()),).toList();
       return Right(food);
     }catch(e){
       return Left(FirebaseRemoteError(error: e.toString()));
     }
+  }
+   @override
+  Future<Either<FirebaseErrors, List<OfficerModel?>>> getOfficers() async{
+   try{
+     var result = await _firestoreManager.getOfficers();
+     List<OfficerModel> officers = result.docs.map((e) => OfficerModel.fromJson(e.data()),).toList();
+     return Right(officers);
+   }catch(e){
+     return Left(FirebaseRemoteError(error: e.toString()));
+   }
+  }
+  @override
+  Future<Either<FirebaseErrors, void>> deleteOfficer({required OfficerModel officer}) async{
+   try{
+     await _firestoreManager.deleteOfficer(docId: officer.id);
+     return Right(null);
+   }catch(e){
+     return Left(FirebaseRemoteError(error: e.toString()));
+   }
+  }
+  @override
+  Future<Either<FirebaseErrors, void>> updateOfficer({required OfficerModel officer}) async{
+   try{
+     await _firestoreManager.updateOfficer(officer: officer);
+     return Right(null);
+   }catch(e){
+     return Left(FirebaseRemoteError(error: e.toString()));
+   }
   }
 }
