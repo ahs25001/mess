@@ -35,6 +35,15 @@ enum HomeStatus {
   getFoodLoading,
   getFoodSuccess,
   getFoodFailure,
+  getOfficersLoading,
+  getOfficersSuccess,
+  getOfficersFailure,
+  updateOfficerLoading,
+  updateOfficerSuccess,
+  updateOfficerFailure,
+  deleteOfficerLoading,
+  deleteOfficerSuccess,
+  deleteOfficerFailure,
 }
 
 enum AddNewInvoiceStatus {

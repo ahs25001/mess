@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mess_app/config/routes/app_routes.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_list_tile.dart';
 import '../cubit/home_cubit.dart';
@@ -19,7 +20,9 @@ class SettingsTab extends StatelessWidget {
           CustomListTile(
             title: 'تعديل بيانات ضابط',
             animatedIconPath: 'assets/json/profile setup.json',
-            onTab: () {},
+            onTab: () {
+              Navigator.pushNamed(context, AppRoutes.updateOfficerScreen);
+            },
           ),
           CustomListTile(
             title: 'تعديل التأسيس',

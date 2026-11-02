@@ -6,11 +6,13 @@ class OfficerModel {
   num militaryIDNumber;
   num amount;
   num consumer;
+  bool isActive;
   OfficerModel({
     required this.id,
     required this.consumer,
     required this.amount,
     required this.name,
+    this.isActive = true,
     required this.rank,
     required this.phone,
     required this.militaryIDNumber,
@@ -19,6 +21,7 @@ class OfficerModel {
   OfficerModel.fromJson(Map<String, dynamic> json)
     : this(
         id: json['id'] ?? '',
+        isActive: json['isActive'] ?? true,
         consumer: json['consumer'],
         name: json['name'] ?? '',
         rank: json['rank'] ?? '',
@@ -29,6 +32,7 @@ class OfficerModel {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'isActive': isActive,
     'name': name,
     'consumer': consumer,
     'rank': rank,
