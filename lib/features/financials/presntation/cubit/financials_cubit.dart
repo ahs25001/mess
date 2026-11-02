@@ -192,9 +192,14 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     for (DispensingItemsModel item in state.canteen ?? []) {
       canteen += item.totalPrice;
     }
-    variable = variable / (consumer + hospitality);
-    perishes = perishes / (state.officers?.length ?? 1);
-    fixed = fixed / (state.officers?.length ?? 1);
+
+    double consumerAndHospitality = consumer + hospitality;
+    variable = consumerAndHospitality > 0 ? (variable / consumerAndHospitality) : 0.0;
+
+    int officersCount = state.officers?.length ?? 0;
+    perishes = officersCount > 0 ? (perishes / officersCount) : 0.0;
+    fixed = officersCount > 0 ? (fixed / officersCount) : 0.0;
+
     MonthEndClosingModel monthEndClosing = MonthEndClosingModel(
       officers: state.officers ?? [],
       hospitality: hospitality,
@@ -373,15 +378,17 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     List<MonthEndClosingOfficerModel> officers = (state.officers ?? []).map((
       e,
     ) {
-      var total =
+      num rawTotal =
           ((state.capital ?? 0) -
-                  ((e.amount) -
-                      ((state.monthEndClosing?.variable ?? 0) * (e.consumer) +
-                          (state.monthEndClosing?.fixed ?? 0) +
-                          (state.monthEndClosing?.perishes ?? 0))))
-              .ceil();
-      num variable = ((state.monthEndClosing?.variable ?? 0) * (e.consumer))
-          .ceil();
+              ((e.amount) -
+                  ((state.monthEndClosing?.variable ?? 0) * (e.consumer) +
+                      (state.monthEndClosing?.fixed ?? 0) +
+                      (state.monthEndClosing?.perishes ?? 0))));
+      var total = (rawTotal.isNaN || rawTotal.isInfinite) ? 0 : rawTotal.ceil();
+      
+      num rawVariable = ((state.monthEndClosing?.variable ?? 0) * (e.consumer));
+      num variable = (rawVariable.isNaN || rawVariable.isInfinite) ? 0 : rawVariable.ceil();
+
       return MonthEndClosingOfficerModel(
         name: "${e.rank} ${e.name}",
         total: total,
@@ -391,6 +398,13 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         perish: state.monthEndClosing?.perishes ?? 0,
       );
     }).toList();
+
+    num rawHospitalityTotal = ((state.monthEndClosing?.hospitality ?? 0) *
+        (1 + (state.monthEndClosing?.variable ?? 0)));
+    num hospitalityTotal = (rawHospitalityTotal.isNaN || rawHospitalityTotal.isInfinite)
+        ? 0
+        : rawHospitalityTotal.ceil();
+
     var saveMonthEndClosingResult = await financialsRepo.saveMonthEndClosing(
       MonthEndClosingHistoryModel(
         officers: officers,
@@ -399,10 +413,7 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         monthEndClosingHospitalityModel: MonthEndClosingHospitalityModel(
           fixed: state.monthEndClosing?.fixed ?? 0,
           consumer: state.monthEndClosing?.hospitality ?? 0,
-          total:
-              ((state.monthEndClosing?.hospitality ?? 0) *
-                      (1 + (state.monthEndClosing?.variable ?? 0)))
-                  .ceil(),
+          total: hospitalityTotal,
         ),
       ),
     );
