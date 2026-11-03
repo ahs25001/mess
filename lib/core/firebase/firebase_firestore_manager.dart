@@ -40,6 +40,32 @@ class FirebaseFirestoreManager {
     for (InvoiceModel invoice in invoices) {
       _firebaseFirestore.collection("Invoices").doc(invoice.id).delete();
     }
+  }Future<void> deleteHospitality() async {
+    var docs = await _firebaseFirestore
+        .collection("Hospitality")
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              DispensingItemsModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get();
+    List<DispensingItemsModel> items = docs.docs.map((e) => e.data()).toList();
+    for (DispensingItemsModel item in items) {
+      _firebaseFirestore.collection("Hospitality").doc(item.id).delete();
+    }
+  }Future<void> deleteCanteen() async {
+    var docs = await _firebaseFirestore
+        .collection("DispensingItemsToCanteen")
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              DispensingItemsModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get();
+    List<DispensingItemsModel> items = docs.docs.map((e) => e.data()).toList();
+    for (DispensingItemsModel item in items) {
+      _firebaseFirestore.collection("DispensingItemsToCanteen").doc(item.id).delete();
+    }
   }
 
   Future<void> addFood({required FoodModel food}) async {

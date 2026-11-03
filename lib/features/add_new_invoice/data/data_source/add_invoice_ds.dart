@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mess_app/core/errors/firebase_errors.dart';
+import 'package:mess_app/core/errors/shared_preferences_errors.dart';
 
 import '../../../../core/models/food_model.dart';
 import '../../../../core/models/invoice_model.dart';
@@ -17,4 +18,5 @@ abstract class AddInvoiceDS {
   Future<Either<FirebaseErrors, void>> upDateFood({
     required FoodModel food,
   });
+  Future<Either<SharedPreferencesErrors,void>>setInvoiceTotal(num value);
 }
