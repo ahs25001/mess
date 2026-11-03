@@ -22,7 +22,7 @@ class MonthEndClosingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FinancialsCubit(),
+      create: (context) => FinancialsCubit()..createMonthEndClosing(),
       child: Scaffold(
         body: Column(
           children: [

@@ -29,6 +29,15 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     );
   }
 
+  void changeAddMoneyMode(AddMoneyMode mode) {
+    emit(
+      state.copyWith(
+        addMoneyMode: mode,
+        status: FinancialsStatus.initial,
+      ),
+    );
+  }
+
   Future<void> getOfficers() async {
     emit(state.copyWith(status: FinancialsStatus.getOfficersLoading));
     FinancialsRepo financialsRepo = FinancialsRepoImpl(
@@ -60,23 +69,143 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     FinancialsRepo financialsRepo = FinancialsRepoImpl(
       FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
     );
-    var result = await financialsRepo.addMoney(
-      amount: amountController.text,
-      officer: state.selectedOfficer,
-    );
-    result.fold(
-      (l) {
-        emit(
-          state.copyWith(
-            status: FinancialsStatus.addMoneyFailure,
-            errorMessage: l.error,
-          ),
+    switch (state.addMoneyMode ?? AddMoneyMode.init) {
+      case AddMoneyMode.addToCanteen:
+        var canteenTotalResult = financialsRepo.getCanteenTotal();
+        canteenTotalResult.fold(
+          (l) {
+            emit(
+              state.copyWith(
+                status: FinancialsStatus.addMoneyFailure,
+                errorMessage: l.message,
+              ),
+            );
+            return;
+          },
+          (r) async {
+            num total = r - (num.tryParse(amountController.text) ?? 0);
+            var setCanteenResult = await financialsRepo.setCanteenTotal(total);
+            setCanteenResult.fold(
+              (l) {
+                emit(
+                  state.copyWith(
+                    status: FinancialsStatus.addMoneyFailure,
+                    errorMessage: l.message,
+                  ),
+                );
+                return;
+              },
+              (_) {
+                emit(
+                  state.copyWith(
+                    status: FinancialsStatus.addMoneySuccess,
+                    addMoneyMode: AddMoneyMode.init,
+                  ),
+                );
+                return;
+              },
+            );
+          },
         );
-      },
-      (r) {
-        emit(state.copyWith(status: FinancialsStatus.addMoneySuccess));
-      },
-    );
+      case AddMoneyMode.init:
+        return;
+      case AddMoneyMode.addToOfficer:
+        var result = await financialsRepo.addMoney(
+          amount: amountController.text,
+          officer: state.selectedOfficer,
+        );
+        result.fold(
+          (l) {
+            emit(
+              state.copyWith(
+                status: FinancialsStatus.addMoneyFailure,
+                errorMessage: l.error,
+              ),
+            );
+            return;
+          },
+          (r) {
+            var getOldOfficersTotal = financialsRepo.getOfficersBalance();
+            getOldOfficersTotal.fold(
+              (l) {
+                emit(
+                  state.copyWith(
+                    status: FinancialsStatus.addMoneyFailure,
+                    errorMessage: l.message,
+                  ),
+                );
+                return;
+              },
+              (r) async {
+                num total =
+                    (r ?? 0) - (num.tryParse(amountController.text) ?? 0);
+                var setCanteenResult = await financialsRepo.setCanteenTotal(
+                  total,
+                );
+                setCanteenResult.fold(
+                  (l) {
+                    emit(
+                      state.copyWith(
+                        status: FinancialsStatus.addMoneyFailure,
+                        errorMessage: l.message,
+                      ),
+                    );
+                    return;
+                  },
+                  (_) {
+                    emit(
+                      state.copyWith(
+                        status: FinancialsStatus.addMoneySuccess,
+                        addMoneyMode: AddMoneyMode.init,
+                      ),
+                    );
+                    return;
+                  },
+                );
+              },
+            );
+          },
+        );
+      case AddMoneyMode.addToHospitality:
+        var hospitalityTotalResult = financialsRepo.getHospitalityTotal();
+        hospitalityTotalResult.fold(
+          (l) {
+            emit(
+              state.copyWith(
+                status: FinancialsStatus.addMoneyFailure,
+                errorMessage: l.message,
+              ),
+            );
+            return;
+          },
+          (r) async {
+            num total = r - (num.tryParse(amountController.text) ?? 0);
+            var setHospitalityResult = await financialsRepo.setHospitalityTotal(
+              total,
+            );
+            setHospitalityResult.fold(
+              (l) {
+                emit(
+                  state.copyWith(
+                    status: FinancialsStatus.addMoneyFailure,
+                    errorMessage: l.message,
+                  ),
+                );
+                return;
+              },
+              (_) {
+                emit(
+                  state.copyWith(
+                    status: FinancialsStatus.addMoneySuccess,
+                    addMoneyMode: AddMoneyMode.init,
+                  ),
+                );
+                return;
+              },
+            );
+          },
+        );
+    }
   }
 
   Future<void> getCapital() async {
@@ -98,6 +227,106 @@ class FinancialsCubit extends Cubit<FinancialsState> {
           state.copyWith(
             status: FinancialsStatus.getCapitalSuccess,
             capital: r,
+          ),
+        );
+      },
+    );
+  }
+
+  void getCanteenBalance() async {
+    FinancialsRepo repo = FinancialsRepoImpl(
+      FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
+    );
+    var result = repo.getCanteenTotal();
+    result.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getCanteenBalanceFailure,
+            errorMessage: l.message,
+          ),
+        );
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getCanteenSuccess,
+            canteenBalance: r,
+          ),
+        );
+      },
+    );
+  }
+
+  void getInvoicesBalance() {
+    FinancialsRepo repo = FinancialsRepoImpl(
+      FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
+    );
+    var result = repo.getInvoicesBalance();
+    result.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getInvoicesBalanceFailure,
+            errorMessage: l.message,
+          ),
+        );
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getInvoicesBalanceSuccess,
+            invoicesBalance: r,
+          ),
+        );
+      },
+    );
+  }
+
+  void getHospitalityBalance() {
+    FinancialsRepo repo = FinancialsRepoImpl(
+      FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
+    );
+    var result = repo.getHospitalityTotal();
+    result.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getHospitalityBalanceFailure,
+            errorMessage: l.message,
+          ),
+        );
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getHospitalityBalanceSuccess,
+            hospitalityBalance: r,
+          ),
+        );
+      },
+    );
+  }
+
+  void getOfficersBalance() {
+    FinancialsRepo repo = FinancialsRepoImpl(
+      FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
+    );
+    var result = repo.getOfficersBalance();
+    result.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getOfficersBalanceFailure,
+            errorMessage: l.message,
+          ),
+        );
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getOfficersBalanceSuccess,
+            officersBalance: r,
           ),
         );
       },
@@ -158,6 +387,8 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     emit(state.copyWith(status: FinancialsStatus.createMonthEndClosingLoading));
     await getCapital();
     await getOfficers();
+    getHospitalityBalance();
+    getCanteenBalance();
     await _getInvoices();
     await _getPerishes();
     await _getCanteen();
@@ -196,14 +427,19 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     double consumerAndHospitality = consumer + hospitality;
     variable = consumerAndHospitality > 0 ? (variable / consumerAndHospitality) : 0.0;
 
-    int officersCount = state.officers?.length ?? 0;
+    int officersCount = 0;
+    for (OfficerModel officer in state.officers ?? []) {
+      if(officer.isActive) {
+        officersCount++;
+      }
+    }
     perishes = officersCount > 0 ? (perishes / officersCount) : 0.0;
     fixed = officersCount > 0 ? (fixed / officersCount) : 0.0;
 
     MonthEndClosingModel monthEndClosing = MonthEndClosingModel(
       officers: state.officers ?? [],
-      hospitality: hospitality,
-      canteen: canteen,
+      hospitality: hospitality+(state.hospitalityBalance??0),
+      canteen: canteen+(state.canteenBalance??0),
       fixed: fixed,
       perishes: perishes,
       variable: variable,
@@ -257,7 +493,7 @@ class FinancialsCubit extends Cubit<FinancialsState> {
       },
       (value) async {
         var setHospitalityResult = await financialsRepo.setHospitalityTotal(
-          value + (state.monthEndClosing?.hospitality ?? 0),
+          state.monthEndClosing?.hospitality ?? 0,
         );
         setHospitalityResult.fold((l) {
           emit(
@@ -270,6 +506,17 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         }, (_) {});
       },
     );
+    var deleteHospitalityResult = await financialsRepo.deleteHospitality();
+    deleteHospitalityResult.fold((l) {
+      emit(
+        state.copyWith(
+          errorMessage: l.error,
+          status: FinancialsStatus.saveMonthEndClosingFailure,
+        ),
+      );
+      return;
+    }, (_) {});
+
     //update canteen amount
     var getCanteenResult = financialsRepo.getCanteenTotal();
     getCanteenResult.fold(
@@ -284,7 +531,7 @@ class FinancialsCubit extends Cubit<FinancialsState> {
       },
       (value) async {
         var setCanteenResult = await financialsRepo.setCanteenTotal(
-          value + (state.monthEndClosing?.canteen ?? 0),
+          state.monthEndClosing?.canteen ?? 0,
         );
         setCanteenResult.fold((l) {
           emit(
@@ -297,6 +544,16 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         }, (_) {});
       },
     );
+    var deleteCanteenResult = await financialsRepo.deleteCanteen();
+    deleteCanteenResult.fold((l) {
+      emit(
+        state.copyWith(
+          errorMessage: l.error,
+          status: FinancialsStatus.saveMonthEndClosingFailure,
+        ),
+      );
+      return;
+    }, (_) {});
     // clear all invoice and create new month invoice
     for (DispensingItemsModel item in (state.perishes) ?? []) {
       var deletePerishesResult = await financialsRepo.deletePerishes(
@@ -352,6 +609,16 @@ class FinancialsCubit extends Cubit<FinancialsState> {
             for (InvoiceItemModel itemModel in items) {
               total += itemModel.price;
             }
+            var setInvoicesBalanceResult = await financialsRepo
+                .setInvoicesBalance(total);
+            setInvoicesBalanceResult.fold((l) {
+              emit(
+                state.copyWith(
+                  errorMessage: l.message,
+                  status: FinancialsStatus.saveMonthEndClosingFailure,
+                ),
+              );
+            }, (_) {});
             var addPostedInvoiceResult = await financialsRepo.addPostedInvoice(
               InvoiceModel(
                 items: items,
@@ -380,14 +647,16 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     ) {
       num rawTotal =
           ((state.capital ?? 0) -
-              ((e.amount) -
-                  ((state.monthEndClosing?.variable ?? 0) * (e.consumer) +
-                      (state.monthEndClosing?.fixed ?? 0) +
-                      (state.monthEndClosing?.perishes ?? 0))));
+          ((e.amount) -
+              ((state.monthEndClosing?.variable ?? 0) * (e.consumer) +
+                  (state.monthEndClosing?.fixed ?? 0) +
+                  (state.monthEndClosing?.perishes ?? 0))));
       var total = (rawTotal.isNaN || rawTotal.isInfinite) ? 0 : rawTotal.ceil();
-      
+
       num rawVariable = ((state.monthEndClosing?.variable ?? 0) * (e.consumer));
-      num variable = (rawVariable.isNaN || rawVariable.isInfinite) ? 0 : rawVariable.ceil();
+      num variable = (rawVariable.isNaN || rawVariable.isInfinite)
+          ? 0
+          : rawVariable.ceil();
 
       return MonthEndClosingOfficerModel(
         name: "${e.rank} ${e.name}",
@@ -398,10 +667,26 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         perish: state.monthEndClosing?.perishes ?? 0,
       );
     }).toList();
-
-    num rawHospitalityTotal = ((state.monthEndClosing?.hospitality ?? 0) *
+    num officersTotal = 0;
+    for (MonthEndClosingOfficerModel officer in officers) {
+      officersTotal += officer.total;
+    }
+    var setOfficersBalanceResult = await financialsRepo.setOfficersBalance(
+      officersTotal,
+    );
+    setOfficersBalanceResult.fold((l) {
+      emit(
+        state.copyWith(
+          errorMessage: l.message,
+          status: FinancialsStatus.saveMonthEndClosingFailure,
+        ),
+      );
+    }, (_) {});
+    num rawHospitalityTotal =
+        ((state.monthEndClosing?.hospitality ?? 0) *
         (1 + (state.monthEndClosing?.variable ?? 0)));
-    num hospitalityTotal = (rawHospitalityTotal.isNaN || rawHospitalityTotal.isInfinite)
+    num hospitalityTotal =
+        (rawHospitalityTotal.isNaN || rawHospitalityTotal.isInfinite)
         ? 0
         : rawHospitalityTotal.ceil();
 
@@ -430,9 +715,7 @@ class FinancialsCubit extends Cubit<FinancialsState> {
     return super.close();
   }
 
-  FinancialsCubit() : super(FinancialsInitial()) {
-    createMonthEndClosing();
-  }
+  FinancialsCubit() : super(FinancialsInitial());
 
   Future<void> _getCanteen() async {
     emit(state.copyWith(status: FinancialsStatus.getCanteenLoading));

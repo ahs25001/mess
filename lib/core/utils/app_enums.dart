@@ -13,6 +13,8 @@ enum SharedPreferencesKeys {
   battalionName('BattalionName'),
   capital("Capital"),
   hospitalityBalance('HospitalityBalance'),
+  officersBalance('OfficersBalance'),
+  invoicesBalance('InvoicesBalance'),
   canteenBalance('CanteenBalance');
 
   final String value;
@@ -75,7 +77,12 @@ enum DispensingItemStatus {
   saveDispensingItemsSuccess,
   saveDispensingItemsError,
 }
-
+enum AddMoneyMode {
+  init,
+  addToOfficer,
+  addToCanteen,
+  addToHospitality,
+}
 enum FinancialsStatus {
   initial,
   addMoneyLoading,
@@ -105,6 +112,18 @@ enum FinancialsStatus {
   getHospitalityLoading,
   getHospitalitySuccess,
   getHospitalityFailure,
+  getOfficersBalanceLoading,
+  getOfficersBalanceSuccess,
+  getOfficersBalanceFailure,
+  getHospitalityBalanceLoading,
+  getHospitalityBalanceSuccess,
+  getHospitalityBalanceFailure,
+  getCanteenBalanceLoading,
+  getCanteenBalanceSuccess,
+  getCanteenBalanceFailure,
+  getInvoicesBalanceLoading,
+  getInvoicesBalanceSuccess,
+  getInvoicesBalanceFailure,
 }
 
 enum InvoicesStatus { init, loading, success, failure }

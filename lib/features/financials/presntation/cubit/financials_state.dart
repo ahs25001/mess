@@ -11,9 +11,19 @@ class FinancialsState {
   List<DispensingItemsModel>?canteen;
   OfficerModel? selectedOfficer;
   num? capital;
+  num? hospitalityBalance;
+  num? canteenBalance;
+  num? invoicesBalance;
+  num? officersBalance;
+  AddMoneyMode? addMoneyMode;
   FinancialsState({
     this.status,
     this.monthEndClosing,
+    this.addMoneyMode,
+    this.officersBalance,
+    this.hospitalityBalance,
+    this.canteenBalance,
+    this.invoicesBalance,
     this.hospitality,
     this.canteen,
     this.perishes,
@@ -25,6 +35,11 @@ class FinancialsState {
   });
   FinancialsState copyWith({
     List<DispensingItemsModel> ?hospitality,
+    num? hospitalityBalance,
+    num? officersBalance,
+    num? canteenBalance,
+    num? invoicesBalance,
+    AddMoneyMode? addMoneyMode,
     List<DispensingItemsModel> ?canteen,
     OfficerModel? selectedOfficer,
     MonthEndClosingModel? monthEndClosing,
@@ -36,6 +51,11 @@ class FinancialsState {
     FinancialsStatus? status,
   }) => FinancialsState(
     officers: officers ?? this.officers,
+    addMoneyMode: addMoneyMode ?? this.addMoneyMode,
+    canteenBalance: canteenBalance??this.canteenBalance,
+    officersBalance: officersBalance??this.officersBalance,
+    hospitalityBalance: hospitalityBalance??this.hospitalityBalance,
+    invoicesBalance: invoicesBalance??this.invoicesBalance,
     hospitality: hospitality??this.hospitality,
     canteen: canteen??this.canteen,
     perishes: perishes ?? this.perishes,
@@ -48,4 +68,6 @@ class FinancialsState {
   );
 }
 
-final class FinancialsInitial extends FinancialsState {}
+final class FinancialsInitial extends FinancialsState {
+   FinancialsInitial(): super(status: FinancialsStatus.initial,addMoneyMode: AddMoneyMode.init);
+}

@@ -72,7 +72,28 @@ class FinancialsDsImpl implements FinancialsDs {
       return Left(SharedPreferencesLocalErrors(e.toString()));
     }
   }
-
+  @override
+  Either<SharedPreferencesErrors, num?> getInvoicesBalance() {
+    try {
+      String capital = _sharedPreferencesManager.getString(
+        SharedPreferencesKeys.invoicesBalance.value,
+      );
+      return Right(num.tryParse(capital));
+    } catch (e) {
+      return Left(SharedPreferencesLocalErrors(e.toString()));
+    }
+  }
+  @override
+  Either<SharedPreferencesErrors, num?> getOfficersBalance() {
+    try {
+      String capital = _sharedPreferencesManager.getString(
+        SharedPreferencesKeys.officersBalance.value,
+      );
+      return Right(num.tryParse(capital));
+    } catch (e) {
+      return Left(SharedPreferencesLocalErrors(e.toString()));
+    }
+  }
   @override
   Future<Either<FirebaseErrors, List<InvoiceModel>>> getInvoices() async {
     try {
@@ -225,5 +246,50 @@ class FinancialsDsImpl implements FinancialsDs {
    }catch(e){
      return Left(FirebaseRemoteError(error: e.toString()));
    }
+  }
+
+  @override
+  Future<Either<SharedPreferencesErrors, void>> setInvoicesBalance(num value) async{
+  try{
+    await _sharedPreferencesManager.saveString(
+      SharedPreferencesKeys.invoicesBalance.value,
+      value.toString(),
+    );
+    return Right(null);
+  }catch(e){
+    return Left(SharedPreferencesLocalErrors(e.toString()));
+  }
+  }
+
+  @override
+  Future<Either<SharedPreferencesErrors, void>> setOfficersBalance(num value)async {
+    try{
+      print("$value sssssssssssssssssssssss ");
+      await _sharedPreferencesManager.saveString(
+        SharedPreferencesKeys.officersBalance.value,
+        value.toString(),
+      );
+      return Right(null);
+    }catch(e){
+      return Left(SharedPreferencesLocalErrors(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<FirebaseErrors, void>> deleteHospitality()async {
+    try{
+      await _firebaseFirestoreManager.deleteHospitality();
+      return Right(null);
+    }catch(e){
+      return Left(FirebaseRemoteError(error: e.toString()));
+    }
+  }  @override
+  Future<Either<FirebaseErrors, void>> deleteCanteen()async {
+    try{
+      await _firebaseFirestoreManager.deleteCanteen();
+      return Right(null);
+    }catch(e){
+      return Left(FirebaseRemoteError(error: e.toString()));
+    }
   }
 }

@@ -10,6 +10,7 @@ import '../../../../core/widgets/custom_app_bar.dart';
 import '../cubit/financials_cubit.dart';
 import '../widgets/add_money_bottom_sheet.dart';
 import '../../../../core/widgets/custom_list_tile.dart';
+import '../widgets/remaining_amount_bottom_sheet.dart';
 
 class FinancialsScreen extends StatelessWidget {
   const FinancialsScreen({super.key});
@@ -22,7 +23,9 @@ class FinancialsScreen extends StatelessWidget {
         child: Material(
           color: AppColors.backgroundCanvas,
           child: BlocProvider(
-            create: (context) => FinancialsCubit()..getOfficers()..getCapital(),
+            create: (context) => FinancialsCubit()
+              ..getOfficers()
+              ..getCapital(),
             child: BlocConsumer<FinancialsCubit, FinancialsState>(
               listener: (context, state) {
                 if (state.status == FinancialsStatus.addMoneyLoading) {
@@ -56,7 +59,7 @@ class FinancialsScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                }  else if (state.status == FinancialsStatus.addMoneySuccess) {
+                } else if (state.status == FinancialsStatus.addMoneySuccess) {
                   Navigator.pop(context); // Dismiss loading dialog
                   Navigator.pop(context); // Dismiss bottom sheet
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -71,8 +74,7 @@ class FinancialsScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                } else if (state.status == FinancialsStatus.addMoneyFailure
-                   ) {
+                } else if (state.status == FinancialsStatus.addMoneyFailure) {
                   Navigator.pop(context); // Dismiss loading dialog
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -90,8 +92,8 @@ class FinancialsScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                }else if (state.status == FinancialsStatus.getCapitalFailure|| state.status == FinancialsStatus.getOfficersFailure
-                   ) {
+                } else if (state.status == FinancialsStatus.getCapitalFailure ||
+                    state.status == FinancialsStatus.getOfficersFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       margin: EdgeInsets.only(
@@ -136,6 +138,14 @@ class FinancialsScreen extends StatelessWidget {
                                         >(
                                           builder: (context, state) {
                                             return AddMoneyBottomSheet(
+                                              changeAddMoneyMode: (mode) {
+                                                context
+                                                    .read<FinancialsCubit>()
+                                                    .changeAddMoneyMode(mode);
+                                              },
+                                              addMoneyMode:
+                                                  state.addMoneyMode ??
+                                                  AddMoneyMode.init,
                                               selectedOfficer:
                                                   state.selectedOfficer,
                                               changeSelectedOfficer: (officer) {
@@ -166,14 +176,80 @@ class FinancialsScreen extends StatelessWidget {
                                 'assets/json/add_money_animated_icon.json',
                           ),
                           CustomListTile(
-                            onTab: () {},
+                            onTab: () {
+                              showModalBottomSheet(
+                                context: context,
+                                showDragHandle: true,
+                                enableDrag: true,
+                                builder: (contextSheet) {
+                                  return BlocProvider.value(
+                                    value: context.read<FinancialsCubit>()
+                                      ..getOfficersBalance()
+                                      ..getHospitalityBalance()
+                                      ..getInvoicesBalance()
+                                      ..getCanteenBalance(),
+                                    child:
+                                        BlocBuilder<
+                                          FinancialsCubit,
+                                          FinancialsState
+                                        >(
+                                          builder: (context, state) =>
+                                              RemainingAmountBottomSheet(
+                                                canteen:
+                                                    (state.canteenBalance ?? 0)
+                                                        .toDouble(),
+                                                total:
+                                                    ((state.capital ?? 0) *
+                                                            (state
+                                                                    .officers
+                                                                    ?.length ??
+                                                                0))
+                                                        .toDouble(),
+                                                cache:
+                                                    (((state.capital ?? 0) *
+                                                            (state
+                                                                    .officers
+                                                                    ?.length ??
+                                                                0))
+                                                        .toDouble()) -
+                                                    ((state.officersBalance ??
+                                                                0)
+                                                            .toDouble() +
+                                                        (state.hospitalityBalance ??
+                                                                0)
+                                                            .toDouble() +
+                                                        (state.invoicesBalance ??
+                                                                0)
+                                                            .toDouble() +
+                                                        (state.canteenBalance ??
+                                                                0)
+                                                            .toDouble()),
+                                                officersAmounts:
+                                                    (state.officersBalance ?? 0)
+                                                        .toDouble(),
+                                                hospitality:
+                                                    (state.hospitalityBalance ??
+                                                            0)
+                                                        .toDouble(),
+                                                invoices:
+                                                    (state.invoicesBalance ?? 0)
+                                                        .toDouble(),
+                                              ),
+                                        ),
+                                  );
+                                },
+                              );
+                            },
                             title: 'المبلغ المتبقي',
                             animatedIconPath:
                                 'assets/json/the_remaining_amount_animated_icon.json',
                           ),
                           CustomListTile(
                             onTab: () {
-                              Navigator.pushNamed(context, AppRoutes.monthEndClosing);
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.monthEndClosing,
+                              );
                             },
                             title: 'تقفيل الشهر',
                             animatedIconPath:
@@ -195,7 +271,7 @@ class FinancialsScreen extends StatelessWidget {
                                         >(
                                           builder: (context, state) =>
                                               BalanceBottomSheet(
-                                                capital: state.capital??0,
+                                                capital: state.capital ?? 0,
                                                 officers: state.officers,
                                               ),
                                         ),
@@ -221,21 +297,95 @@ class FinancialsScreen extends StatelessWidget {
   }
 
   void _onAddMoneySubmit(BuildContext context, FinancialsState state) {
-    if (state.selectedOfficer != null &&
-        context
-            .read<FinancialsCubit>()
-            .amountController
-            .text
-            .trim()
-            .isNotEmpty) {
-      context.read<FinancialsCubit>().addMoney();
-    } else if (state.selectedOfficer == null &&
-        context
-            .read<FinancialsCubit>()
-            .amountController
-            .text
-            .trim()
-            .isNotEmpty) {
+    if (state.addMoneyMode == AddMoneyMode.addToOfficer) {
+      if (state.selectedOfficer != null &&
+          context
+              .read<FinancialsCubit>()
+              .amountController
+              .text
+              .trim()
+              .isNotEmpty) {
+        context.read<FinancialsCubit>().addMoney();
+      } else if (state.selectedOfficer == null &&
+          context
+              .read<FinancialsCubit>()
+              .amountController
+              .text
+              .trim()
+              .isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.only(
+              bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
+            ),
+            backgroundColor: AppColors.red,
+            content: Text(
+              "اختر ضابط",
+              style: TextStyle(color: AppColors.white, fontSize: 14.sp),
+            ),
+          ),
+        );
+      } else if (context
+              .read<FinancialsCubit>()
+              .amountController
+              .text
+              .trim()
+              .isEmpty &&
+          state.selectedOfficer != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.only(
+              bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
+            ),
+            backgroundColor: AppColors.red,
+            content: Text(
+              'ادخل المبلغ',
+              style: TextStyle(color: AppColors.white, fontSize: 14.sp),
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.only(
+              bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
+            ),
+            backgroundColor: AppColors.red,
+            content: Text(
+              'اختر الضابط وادخل المبلغ',
+              style: TextStyle(color: AppColors.white, fontSize: 14.sp),
+            ),
+          ),
+        );
+      }
+    } else if (state.addMoneyMode == AddMoneyMode.addToCanteen ||
+        state.addMoneyMode == AddMoneyMode.addToHospitality) {
+      if(context
+          .read<FinancialsCubit>()
+          .amountController
+          .text
+          .trim()
+          .isEmpty ){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.only(
+              bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
+            ),
+            backgroundColor: AppColors.red,
+            content: Text(
+              'ادخل المبلغ',
+              style: TextStyle(color: AppColors.white, fontSize: 14.sp),
+            ),
+          ),
+        );
+      }else {
+        context.read<FinancialsCubit>().addMoney();
+      }
+    }else if(state.addMoneyMode==AddMoneyMode.init){
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           behavior: SnackBarBehavior.floating,
@@ -244,41 +394,7 @@ class FinancialsScreen extends StatelessWidget {
           ),
           backgroundColor: AppColors.red,
           content: Text(
-            "اختر ضابط",
-            style: TextStyle(color: AppColors.white, fontSize: 14.sp),
-          ),
-        ),
-      );
-    } else if (context
-            .read<FinancialsCubit>()
-            .amountController
-            .text
-            .trim()
-            .isEmpty &&
-        state.selectedOfficer != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-            bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
-          ),
-          backgroundColor: AppColors.red,
-          content: Text(
-            'ادخل المبلغ',
-            style: TextStyle(color: AppColors.white, fontSize: 14.sp),
-          ),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-            bottom: (MediaQuery.sizeOf(context).height / 3) + 70.h,
-          ),
-          backgroundColor: AppColors.red,
-          content: Text(
-            'اختر الضابط وادخل المبلغ',
+            'إختر نوع التحصيل',
             style: TextStyle(color: AppColors.white, fontSize: 14.sp),
           ),
         ),

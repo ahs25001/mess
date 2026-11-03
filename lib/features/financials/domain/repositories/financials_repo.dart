@@ -18,9 +18,16 @@ abstract class FinancialsRepo {
     required OfficerModel? officer,
   });
   Either<SharedPreferencesErrors, num?> getCapital();
+  Either<SharedPreferencesErrors, num?> getOfficersBalance();
+  Either<SharedPreferencesErrors, num?> getInvoicesBalance();
+  Future<Either<SharedPreferencesErrors, void>>setOfficersBalance(num value);
+  Future<Either<SharedPreferencesErrors, void>>setInvoicesBalance(num value);
+
   Future<Either<FirebaseErrors, List<InvoiceModel>>> getInvoices();
   Future<Either<FirebaseErrors, List<DispensingItemsModel>>> getPerishes();
   Future<Either<FirebaseErrors, void>> deletePerishes({required String docId});
+  Future<Either<FirebaseErrors, void>> deleteHospitality();
+  Future<Either<FirebaseErrors, void>> deleteCanteen();
   Future<Either<FirebaseErrors, List<DispensingItemsModel>>> getHospitality();
   Future<Either<FirebaseErrors, List<DispensingItemsModel>>> getCanteen();
   Either<SharedPreferencesErrors, num> getHospitalityTotal();
