@@ -7,6 +7,7 @@ import 'package:mess_app/core/models/food_model.dart';
 import 'package:mess_app/core/models/invoice_model.dart';
 import 'package:mess_app/features/dispensing_items/data/models/dispensing_items_model.dart';
 
+import '../../../../core/errors/shared_preferences_errors.dart';
 import '../../domain/repositories/add_invoice_repository.dart';
 import '../data_source/add_invoice_ds.dart';
 
@@ -28,4 +29,7 @@ class AddInvoiceRepositoryImpl implements AddInvoiceRepository {
   @override
   Future<Either<FirebaseErrors, void>> upDateFood({required FoodModel food}) =>
       addInvoiceDS.upDateFood(food: food);
+  @override
+  Future<Either<SharedPreferencesErrors, void>> setInvoiceTotal(num value) =>
+      addInvoiceDS.setInvoiceTotal(value);
 }

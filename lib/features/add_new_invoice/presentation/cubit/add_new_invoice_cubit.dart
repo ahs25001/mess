@@ -10,6 +10,7 @@ import '../../../../core/models/food_model.dart';
 import '../../../../core/models/invoice_item_model.dart';
 import '../../../../core/models/invoice_model.dart';
 import '../../../../core/models/price_model.dart';
+import '../../../../core/shared_preferences/shared_preferences_manager.dart';
 import '../../../../core/utils/app_enums.dart';
 
 part 'add_new_invoice_state.dart';
@@ -86,7 +87,8 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
     }
     AddInvoiceRepository repo = AddInvoiceRepositoryImpl(
       addInvoiceDS: AddInvoiceDSImpl(
-        firebaseFirestoreManager: FirebaseFirestoreManager(),
+        FirebaseFirestoreManager(),
+        SharedPreferencesManager(),
       ),
     );
     for (var item in items) {
@@ -105,8 +107,10 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
       );
       var updateFoodResult = await repo.upDateFood(
         food: FoodModel(
-          isFixedMiscellaneousExpenses: item.food?.isFixedMiscellaneousExpenses ?? false,
-          isVariableMiscellaneousExpenses: item.food?.isVariableMiscellaneousExpenses ?? false,
+          isFixedMiscellaneousExpenses:
+              item.food?.isFixedMiscellaneousExpenses ?? false,
+          isVariableMiscellaneousExpenses:
+              item.food?.isVariableMiscellaneousExpenses ?? false,
           name: item.food?.name ?? "",
           quantity: (item.food?.quantity ?? 0) + item.quantity,
           id: item.food?.id ?? "",
@@ -124,7 +128,16 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
       total: total,
       items: items,
     );
-
+    var setInvoiceTotalResult = await repo.setInvoiceTotal(total);
+    setInvoiceTotalResult.fold((l) {
+      emit(
+        state.copyWith(
+          status: AddNewInvoiceStatus.addInvoiceFailure,
+          errorMessage: l.message,
+        ),
+      );
+      return;
+    }, (_) {});
     var addInvoiceResult = await repo.addNewInvoice(invoice: invoiceModel);
     addInvoiceResult.fold(
       (error) {
@@ -150,7 +163,8 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
     emit(state.copyWith(status: AddNewInvoiceStatus.addFoodLoading));
     AddInvoiceRepository repo = AddInvoiceRepositoryImpl(
       addInvoiceDS: AddInvoiceDSImpl(
-        firebaseFirestoreManager: FirebaseFirestoreManager(),
+        FirebaseFirestoreManager(),
+        SharedPreferencesManager(),
       ),
     );
     FoodModel foodModel = FoodModel(
@@ -208,7 +222,8 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
   void getFood() {
     var repo = AddInvoiceRepositoryImpl(
       addInvoiceDS: AddInvoiceDSImpl(
-        firebaseFirestoreManager: FirebaseFirestoreManager(),
+        FirebaseFirestoreManager(),
+        SharedPreferencesManager(),
       ),
     );
     var result = repo.getFood();

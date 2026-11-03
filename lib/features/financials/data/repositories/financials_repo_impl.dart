@@ -32,6 +32,12 @@ class FinancialsRepoImpl implements FinancialsRepo {
   Either<SharedPreferencesErrors, num?> getCapital() =>
       _financialsDs.getCapital();
   @override
+  Either<SharedPreferencesErrors, num?> getOfficersBalance() =>
+      _financialsDs.getOfficersBalance();
+  @override
+  Either<SharedPreferencesErrors, num?> getInvoicesBalance() =>
+      _financialsDs.getInvoicesBalance();
+  @override
   Future<Either<FirebaseErrors, List<InvoiceModel>>> getInvoices() =>
       _financialsDs.getInvoices();
   @override
@@ -64,8 +70,9 @@ class FinancialsRepoImpl implements FinancialsRepo {
   Future<Either<FirebaseErrors, List<FoodModel>>> getAvailableFood() =>
       _financialsDs.getAvailableFood();
   @override
-  Future<Either<FirebaseErrors, void>> addPostedInvoice(InvoiceModel postedInvoice) =>
-      _financialsDs.addPostedInvoice(postedInvoice);
+  Future<Either<FirebaseErrors, void>> addPostedInvoice(
+    InvoiceModel postedInvoice,
+  ) => _financialsDs.addPostedInvoice(postedInvoice);
   @override
   Future<Either<FirebaseErrors, void>> deleteAllInvoices() =>
       _financialsDs.deleteAllInvoices();
@@ -74,6 +81,21 @@ class FinancialsRepoImpl implements FinancialsRepo {
     MonthEndClosingHistoryModel monthEndClosingHistoryModel,
   ) => _financialsDs.saveMonthEndClosing(monthEndClosingHistoryModel);
   @override
-  Future<Either<FirebaseErrors, void>> deletePerishes({required String docId}) =>
-      _financialsDs.deletePerishes(docId: docId);
+  Future<Either<FirebaseErrors, void>> deletePerishes({
+    required String docId,
+  }) => _financialsDs.deletePerishes(docId: docId);
+  @override
+  Future<Either<FirebaseErrors, void>> deleteHospitality(
+  ) => _financialsDs.deleteHospitality();
+
+  @override
+  Future<Either<SharedPreferencesErrors, void>> setInvoicesBalance(num value) =>
+      _financialsDs.setInvoicesBalance(value);
+
+  @override
+  Future<Either<SharedPreferencesErrors, void>> setOfficersBalance(num value) =>
+      _financialsDs.setOfficersBalance(value);
+  @override
+  Future<Either<FirebaseErrors, void>> deleteCanteen() =>
+      _financialsDs.deleteCanteen();
 }

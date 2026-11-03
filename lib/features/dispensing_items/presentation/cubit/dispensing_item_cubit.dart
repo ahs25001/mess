@@ -430,10 +430,16 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
         );
       },
       (r) {
+        List<OfficerModel> officers = [];
+        for(OfficerModel officer in r??[]){
+          if(officer.isActive){
+            officers.add(officer);
+          }
+        }
         emit(
           state.copyWith(
             dispensingItemStatus: DispensingItemStatus.getOfficersSuccess,
-            officers: r,
+            officers: officers,
           ),
         );
       },
