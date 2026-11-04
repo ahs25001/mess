@@ -146,6 +146,7 @@ class HomeCubit extends Cubit<HomeState> {
         );
       },
       (r) {
+        formKey.currentState?.reset();
         nameController.clear();
         militaryIDNumberController.clear();
         phoneController.clear();
@@ -173,6 +174,7 @@ class HomeCubit extends Cubit<HomeState> {
         );
       },
       (r) {
+        formKey.currentState?.reset();
         nameController.clear();
         militaryIDNumberController.clear();
         phoneController.clear();

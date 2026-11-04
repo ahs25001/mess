@@ -358,7 +358,10 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
     );
     num totalPrice = 0;
     for (DispensingItemsModel item in state.items ?? []) {
-      item.officerId = state.selectedOfficer?.id ?? "";
+      //todo update officers ids
+      for (OfficerModel officer in state.selectedOfficers??[]) {
+        (item.officersIds).add(officer.id);
+      }
       totalPrice += item.totalPrice;
       var result = await repo.addDispensingItemsToOfficer(
         dispensingItems: item,

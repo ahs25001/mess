@@ -1,5 +1,4 @@
 import 'package:mess_app/core/models/food_model.dart';
-import 'package:mess_app/core/models/price_model.dart';
 
 class DispensingItemsModel {
   final double quantity;
@@ -7,12 +6,14 @@ class DispensingItemsModel {
    String id;
   final double totalPrice;
    String officerId;
+   List<String>officersIds;
    FoodModel food;
   // final List<dynamic>prices;
 
    DispensingItemsModel({
     required this.officerId,
     required this.quantity,
+     this.officersIds = const[],
     required this.name,
      required this.food,
     // required this.prices,
@@ -24,6 +25,7 @@ class DispensingItemsModel {
       : this(
     officerId: json['officerId'] ?? '',
     food: FoodModel.fromJson(json['food']),
+    officersIds: json['officersIds']?.cast<String>(),
     name: json['name'] ?? '',
     // prices: (json['prices'] as List)
     //     .map((e) => PriceModel.fromJson(e))
@@ -38,6 +40,7 @@ class DispensingItemsModel {
       "name": name,
       "id": id,
       "food": food.toJson(),
+      "officersIds": officersIds,
       "officerId": officerId,
       // "prices": prices.map((e) => e.toJson()).toList(),
       "quantity": quantity,
