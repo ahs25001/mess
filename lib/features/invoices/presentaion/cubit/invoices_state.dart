@@ -1,7 +1,5 @@
 part of 'invoices_cubit.dart';
 
-enum InvoicesStatus { init, loading, success, failure }
-
 class InvoicesState {
   final InvoicesStatus? status;
   final List<InvoiceModel>? invoices;

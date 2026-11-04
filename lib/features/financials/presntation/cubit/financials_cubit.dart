@@ -207,7 +207,22 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         );
     }
   }
-
+void getTotalAmountAndConsumer() async {
+  emit(state.copyWith(status: FinancialsStatus.getTotalAmountAndConsumerLoading));
+  if(state.officers==null||state.officers!.isEmpty){
+    getOfficers();
+  }
+  num totalAmount = 0,totalConsumer = 0;
+  for(OfficerModel officer in state.officers!){
+    totalAmount+=officer.amount;
+    totalConsumer+=officer.consumer;
+  }
+  emit(state.copyWith(
+    status: FinancialsStatus.getTotalAmountAndConsumerSuccess,
+    totalOfficersAmount: totalAmount,
+    totalConsumerAmount: totalConsumer,
+  ));
+}
   Future<void> getCapital() async {
     FinancialsRepo repo = FinancialsRepoImpl(
       FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),

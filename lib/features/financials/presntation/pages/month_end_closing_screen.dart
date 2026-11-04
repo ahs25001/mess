@@ -24,8 +24,12 @@ class MonthEndClosingScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => FinancialsCubit()..createMonthEndClosing(),
       child: Scaffold(
-        body: Column(
-          children: [
+        body: Hero(
+          tag: HeroTags.monthEndClosing.value,
+          child: Material(
+            color: AppColors.backgroundCanvas,
+            child: Column(
+              children: [
             CustomAppBar(title: 'تقفيل الشهر'),
             BlocConsumer<FinancialsCubit, FinancialsState>(
               listener: (context, state) {
@@ -704,6 +708,8 @@ class MonthEndClosingScreen extends StatelessWidget {
           ],
         ),
       ),
+    ),
+    )
     );
   }
 }

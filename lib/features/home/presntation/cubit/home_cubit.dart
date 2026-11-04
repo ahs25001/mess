@@ -9,6 +9,7 @@ import 'package:mess_app/features/home/data/repositories/home_repo_impl.dart';
 import 'package:mess_app/features/home/domain/repositories/home_repo.dart';
 
 import '../../../../core/utils/app_enums.dart';
+import '../../../dispensing_items/data/models/dispensing_items_model.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -161,9 +162,7 @@ class HomeCubit extends Cubit<HomeState> {
     HomeRepo repo = HomeRepoImpl(
       HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
     );
-    var result = await repo.deleteOfficer(
-      officer: state.selectedOfficer!,
-    );
+    var result = await repo.deleteOfficer(officer: state.selectedOfficer!);
     result.fold(
       (l) {
         emit(
@@ -179,6 +178,34 @@ class HomeCubit extends Cubit<HomeState> {
         militaryIDNumberController.clear();
         phoneController.clear();
         emit(state.copyWith(status: HomeStatus.deleteOfficerSuccess));
+      },
+    );
+  }
+
+  void getOfficerItems() async {
+    emit(state.copyWith(status: HomeStatus.getOfficerItemsLoading));
+    HomeRepo repo = HomeRepoImpl(
+      HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
+    );
+    var result = await repo.getOfficersDispensedItems(
+      state.selectedOfficer?.id ?? '',
+    );
+    result.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.getOfficersFailure,
+            errorMessage: l.error,
+          ),
+        );
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.getOfficersSuccess,
+            officerItems: r,
+          ),
+        );
       },
     );
   }

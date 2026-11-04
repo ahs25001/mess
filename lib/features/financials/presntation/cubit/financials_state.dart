@@ -15,6 +15,8 @@ class FinancialsState {
   num? canteenBalance;
   num? invoicesBalance;
   num? officersBalance;
+  num? totalOfficersAmount;
+  num? totalConsumerAmount;
   AddMoneyMode? addMoneyMode;
   FinancialsState({
     this.status,
@@ -22,6 +24,8 @@ class FinancialsState {
     this.addMoneyMode,
     this.officersBalance,
     this.hospitalityBalance,
+    this.totalOfficersAmount,
+    this.totalConsumerAmount,
     this.canteenBalance,
     this.invoicesBalance,
     this.hospitality,
@@ -37,6 +41,8 @@ class FinancialsState {
     List<DispensingItemsModel> ?hospitality,
     num? hospitalityBalance,
     num? officersBalance,
+    num? totalOfficersAmount,
+    num? totalConsumerAmount,
     num? canteenBalance,
     num? invoicesBalance,
     AddMoneyMode? addMoneyMode,
@@ -51,6 +57,8 @@ class FinancialsState {
     FinancialsStatus? status,
   }) => FinancialsState(
     officers: officers ?? this.officers,
+    totalOfficersAmount: totalOfficersAmount ?? this.totalOfficersAmount,
+    totalConsumerAmount: totalConsumerAmount ?? this.totalConsumerAmount,
     addMoneyMode: addMoneyMode ?? this.addMoneyMode,
     canteenBalance: canteenBalance??this.canteenBalance,
     officersBalance: officersBalance??this.officersBalance,

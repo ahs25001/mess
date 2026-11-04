@@ -7,6 +7,7 @@ import '../../../../core/errors/firebase_errors.dart';
 import '../../../../core/models/food_model.dart';
 import '../../../../core/models/officer_model.dart';
 import '../../../../core/shared_preferences/shared_preferences_manager.dart';
+import '../../../dispensing_items/data/models/dispensing_items_model.dart';
 import 'home_ds.dart';
 
 class HomeDSImpl implements HomeDS {
@@ -60,6 +61,15 @@ class HomeDSImpl implements HomeDS {
    try{
      await _firestoreManager.updateOfficer(officer: officer);
      return Right(null);
+   }catch(e){
+     return Left(FirebaseRemoteError(error: e.toString()));
+   }
+  }
+  @override
+  Future<Either<FirebaseRemoteError, List<DispensingItemsModel>>> getOfficersDispensedItems(String officerId) async{
+   try{
+    var items = await _firestoreManager.getOfficerDispensedItems( officerId);
+     return Right(items);
    }catch(e){
      return Left(FirebaseRemoteError(error: e.toString()));
    }

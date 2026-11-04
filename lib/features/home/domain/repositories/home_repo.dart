@@ -4,6 +4,7 @@ import 'package:mess_app/core/models/food_model.dart';
 
 import '../../../../core/errors/shared_preferences_errors.dart';
 import '../../../../core/models/officer_model.dart';
+import '../../../dispensing_items/data/models/dispensing_items_model.dart';
 
 abstract class HomeRepo {
   Future<Either<SharedPreferencesLocalErrors, void>> saveString({
@@ -18,4 +19,5 @@ abstract class HomeRepo {
   Future<Either<FirebaseErrors, void>> deleteOfficer({
     required OfficerModel officer,
   });
+  Future<Either<FirebaseRemoteError, List<DispensingItemsModel>>> getOfficersDispensedItems(String officerId);
 }

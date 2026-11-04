@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mess_app/core/models/food_model.dart';
 
 class DispensingItemsModel {
@@ -8,11 +9,13 @@ class DispensingItemsModel {
    String officerId;
    List<String>officersIds;
    FoodModel food;
+   final Timestamp date;
   // final List<dynamic>prices;
 
    DispensingItemsModel({
     required this.officerId,
     required this.quantity,
+     required this.date,
      this.officersIds = const[],
     required this.name,
      required this.food,
@@ -24,6 +27,7 @@ class DispensingItemsModel {
   DispensingItemsModel.fromJson(Map<String, dynamic> json)
       : this(
     officerId: json['officerId'] ?? '',
+    date: json['date'],
     food: FoodModel.fromJson(json['food']),
     officersIds: json['officersIds']?.cast<String>(),
     name: json['name'] ?? '',
@@ -38,6 +42,7 @@ class DispensingItemsModel {
   Map<String, dynamic> toJson() {
     return {
       "name": name,
+      "date": date,
       "id": id,
       "food": food.toJson(),
       "officersIds": officersIds,

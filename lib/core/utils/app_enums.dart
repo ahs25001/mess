@@ -3,7 +3,12 @@ enum HeroTags {
   addNewOfficer("addNewOfficer"),
   financials("financials"),
   invoices("invoices"),
-  disburse("disburse");
+  disburse("disburse"),
+  inventoryOfItems("inventoryOfItems"),
+  monthEndClosing("monthEndClosing"),
+  closingOutTheMonths("closingOutTheMonths"),
+  updateOfficerScreen("updateOfficerScreen"),
+  listOfCategoriesForOfficersScreen("listOfCategoriesForOfficersScreen");
 
   final String value;
   const HeroTags(this.value);
@@ -46,6 +51,9 @@ enum HomeStatus {
   deleteOfficerLoading,
   deleteOfficerSuccess,
   deleteOfficerFailure,
+  getOfficerItemsLoading,
+  getOfficerItemsSuccess,
+  getOfficerItemsFailure,
 }
 
 enum AddNewInvoiceStatus {
@@ -124,6 +132,9 @@ enum FinancialsStatus {
   getInvoicesBalanceLoading,
   getInvoicesBalanceSuccess,
   getInvoicesBalanceFailure,
+  getTotalAmountAndConsumerLoading,
+  getTotalAmountAndConsumerSuccess,
+  getTotalAmountAndConsumerFailure,
 }
 
 enum InvoicesStatus { init, loading, success, failure }
