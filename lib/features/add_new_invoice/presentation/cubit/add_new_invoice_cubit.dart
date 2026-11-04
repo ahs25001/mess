@@ -49,6 +49,7 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
       ),
     );
 
+    formKey.currentState?.reset();
     priceController.clear();
     quantityController.clear();
     emit(state.copyWith(items: items, selectedFood: null));
@@ -149,6 +150,8 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
         );
       },
       (_) {
+        formKey.currentState?.reset();
+        representativeNameController.clear();
         emit(
           state.copyWith(
             status: AddNewInvoiceStatus.addInvoiceSuccess,
@@ -188,6 +191,8 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
         );
       },
       (_) {
+        formKey.currentState?.reset();
+        newFoodNameController.clear();
         emit(
           state.copyWith(
             status: AddNewInvoiceStatus.addFoodSuccess,
@@ -196,7 +201,6 @@ class AddNewInvoiceCubit extends Cubit<AddNewInvoiceState> {
             newFoodIsVariableMiscellaneousExpenses: false,
           ),
         );
-        newFoodNameController.clear();
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mess_app/core/firebase/firebase_firestore_manager.dart';
+import 'package:mess_app/core/shared_preferences/shared_preferences_manager.dart';
 import 'package:mess_app/features/adding_officers/data/data_source/add_new_officer_ds_impl.dart';
 import 'package:mess_app/features/adding_officers/domain/repositories/add_new_officer_repo.dart';
 
@@ -26,8 +27,31 @@ class AddNewOfficerCubit extends Cubit<AddNewOfficerState> {
   void addOfficer() async {
     emit(state.copyWith(status: AddNewOfficerStateStatus.loading));
     AddNewOfficerRepo addNewOfficerRepo = AddNewOfficerRepoImpl(
-      AddNewOfficerDsImpl(FirebaseFirestoreManager()),
+      AddNewOfficerDsImpl(FirebaseFirestoreManager(),SharedPreferencesManager()),
     );
+    var getCapitalResult =  addNewOfficerRepo.getCapital();
+    getCapitalResult.fold((l) {
+      emit(
+        state.copyWith(
+          message: l.message,
+          status: AddNewOfficerStateStatus.failure,
+        ),
+      );
+      return;
+    }, (r) async{
+      var setOfficersBalanceResult =  await addNewOfficerRepo.setOfficersBalance(r);
+      setOfficersBalanceResult.fold((l) {
+        emit(
+          state.copyWith(
+            message: l.message,
+            status: AddNewOfficerStateStatus.failure,
+          ),
+        );
+        return;
+      }, (_) {
+      },);
+    },);
+
     var result = await addNewOfficerRepo.addNewOfficer(
       OfficerModel(
         consumer: 0,
@@ -49,10 +73,10 @@ class AddNewOfficerCubit extends Cubit<AddNewOfficerState> {
         );
       },
       (r) {
+        formKey.currentState?.reset();
         nameController.clear();
         militaryIDNumberController.clear();
         phoneController.clear();
-        print('ssssssssssssss');
         emit(state.copyWith(status: AddNewOfficerStateStatus.success));
       },
     );

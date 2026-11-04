@@ -20,6 +20,7 @@ class AddNewOfficerScreen extends StatelessWidget {
         body: BlocConsumer<AddNewOfficerCubit, AddNewOfficerState>(
           listener: (context, state) {
             if (state.status == AddNewOfficerStateStatus.success) {
+              context.read<AddNewOfficerCubit>().formKey.currentState?.reset();
               Navigator.pop(context); // Dismiss loading dialog
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -66,6 +67,7 @@ class AddNewOfficerScreen extends StatelessWidget {
               child: Hero(
                 tag: HeroTags.addNewOfficer.value,
                 child: Material(
+                  color: AppColors.cardBackground,
                   child: Column(
                     children: [
                       const CustomAppBar(title: "إضافة ضابط جديد"),

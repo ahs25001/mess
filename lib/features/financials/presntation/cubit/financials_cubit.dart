@@ -139,10 +139,10 @@ class FinancialsCubit extends Cubit<FinancialsState> {
               (r) async {
                 num total =
                     (r ?? 0) - (num.tryParse(amountController.text) ?? 0);
-                var setCanteenResult = await financialsRepo.setCanteenTotal(
+                var setOfficersBalanceResult = await financialsRepo.setOfficersBalance(
                   total,
                 );
-                setCanteenResult.fold(
+                setOfficersBalanceResult.fold(
                   (l) {
                     emit(
                       state.copyWith(
