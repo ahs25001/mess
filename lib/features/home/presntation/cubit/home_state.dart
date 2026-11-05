@@ -9,10 +9,12 @@ class HomeState {
   List<OfficerModel?>?officers;
   OfficerModel? selectedOfficer;
   bool? isOfficerActive;
+  num?capital;
   List<DispensingItemsModel?>? officerItems;
   HomeState({
     this.status,
     this.currentIndex,
+    this.capital,
     this.selectedOfficer,
     this.isOfficerActive,
     this.errorMessage,
@@ -23,6 +25,7 @@ class HomeState {
   });
   HomeState copyWith({
     HomeStatus? status,
+    num ?capital,
     String? selectedRank,
     bool? isOfficerActive,
     String? errorMessage,
@@ -39,6 +42,7 @@ class HomeState {
     selectedOfficer: selectedOfficer ?? this.selectedOfficer,
     officers: officers ?? this.officers,
     selectedRank: selectedRank ?? this.selectedRank,
+    capital: capital ?? this.capital,
     errorMessage: errorMessage ?? this.errorMessage,
     currentIndex: currentIndex ?? this.currentIndex,
   );

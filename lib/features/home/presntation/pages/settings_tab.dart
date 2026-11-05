@@ -56,11 +56,17 @@ class SettingsTab extends StatelessWidget {
                               .updateCapitalController,
                           onSave: () {
                             if (context
-                                .read<HomeCubit>()
-                                .updateCapitalController
-                                .text
-                                .trim()
-                                .isNotEmpty) {
+                                    .read<HomeCubit>()
+                                    .updateCapitalController
+                                    .text
+                                    .trim()
+                                    .isNotEmpty &&
+                                context
+                                        .read<HomeCubit>()
+                                        .updateCapitalController
+                                        .text
+                                        .trim() !=
+                                    '0') {
                               context.read<HomeCubit>().setCapital();
                             } else {
                               ScaffoldMessenger.of(dialogContext).showSnackBar(

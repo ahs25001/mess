@@ -323,6 +323,65 @@ class UpdateOfficerScreen extends StatelessWidget {
                                           ),
                                         );
                                         return;
+                                      }else if(state.selectedOfficer?.consumer!=0){
+                                        showDialog(
+                                          context: context,
+                                          builder: (dialogContext) =>
+                                              AlertDialog(
+                                                title: Text(
+                                                  "تنبيه",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: AppColors.red,
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  "لا يمكن حذف الضابط قبل تقفيل الشهر",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  FilledButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                          dialogContext,
+                                                        ),
+                                                    style: FilledButton.styleFrom(
+                                                      side: BorderSide(
+                                                        color: AppColors.primary,
+                                                      ),
+                                                      backgroundColor:
+                                                      Colors.transparent,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadiusGeometry.circular(
+                                                          10.r,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    child: Text(
+                                                      "تمام",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.w500,
+                                                        fontSize: 16.sp,
+                                                        color: AppColors.primary,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                   ],
+                                              ).zoomIn(
+                                                duration: Duration(
+                                                  milliseconds: 300,
+                                                ),
+                                                curve: Curves.easeInOutBack,
+                                              ),
+                                        );
+                                        return;
                                       }
                                       showDialog(
                                         context: context,

@@ -54,6 +54,9 @@ enum HomeStatus {
   getOfficerItemsLoading,
   getOfficerItemsSuccess,
   getOfficerItemsFailure,
+  getCapitalLoading,
+  getCapitalSuccess,
+  getCapitalFailure,
 }
 
 enum AddNewInvoiceStatus {
@@ -85,12 +88,9 @@ enum DispensingItemStatus {
   saveDispensingItemsSuccess,
   saveDispensingItemsError,
 }
-enum AddMoneyMode {
-  init,
-  addToOfficer,
-  addToCanteen,
-  addToHospitality,
-}
+
+enum AddMoneyMode { init, addToOfficer, addToCanteen, addToHospitality }
+
 enum FinancialsStatus {
   initial,
   addMoneyLoading,

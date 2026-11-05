@@ -49,14 +49,13 @@ class HomeCubit extends Cubit<HomeState> {
         );
         return;
       },
-      (oldCapital)async {
+      (oldCapital) async {
         if ((state.officers ?? []).isEmpty) {
-         await getOfficers();
+          await getOfficers();
         }
-        num newTotalCapital =
-            (num.tryParse(updateCapitalController.text) ?? 0) ;
-        num difference = (newTotalCapital - oldCapital)*
-            (state.officers?.length ?? 0);
+        num newTotalCapital = (num.tryParse(updateCapitalController.text) ?? 0);
+        num difference =
+            (newTotalCapital - oldCapital) * (state.officers?.length ?? 0);
         var getOfficersAmountResult = homeRepo.getOfficersAmount();
         getOfficersAmountResult.fold(
           (l) {
@@ -97,7 +96,7 @@ class HomeCubit extends Cubit<HomeState> {
           errorMessage: l.message,
         ),
       ),
-      (r) => emit(state.copyWith(status: HomeStatus.setCapitalSuccess)),
+      (r) => emit(state.copyWith(status: HomeStatus.setCapitalSuccess,capital:num.tryParse(updateCapitalController.text) )),
     );
   }
 
@@ -211,6 +210,27 @@ class HomeCubit extends Cubit<HomeState> {
       HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
     );
     var result = await repo.deleteOfficer(officer: state.selectedOfficer!);
+    var getOfficersAmountResult = repo.getOfficersAmount();
+    getOfficersAmountResult.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.deleteOfficerFailure,
+            errorMessage: l.message,
+          ),
+        );
+        return;
+      },
+      (officersBalance) {
+        if ((state.capital ?? 0) == 0) {
+          getCapital();
+        }
+        repo.saveString(
+          key: SharedPreferencesKeys.officersBalance.value,
+          value: (officersBalance - (state.capital ?? 0)).toString(),
+        );
+      },
+    );
     result.fold(
       (l) {
         emit(
@@ -228,6 +248,26 @@ class HomeCubit extends Cubit<HomeState> {
         emit(state.copyWith(status: HomeStatus.deleteOfficerSuccess));
       },
     );
+  }
+
+  void getCapital() {
+    Future.microtask(() {
+      emit(state.copyWith(status: HomeStatus.getCapitalLoading));
+      HomeRepo homeRepo = HomeRepoImpl(
+        HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
+      );
+      var result = homeRepo.getCapital();
+      result.fold(
+        (l) {
+          emit(state.copyWith(status: HomeStatus.getCapitalFailure));
+        },
+        (r) {
+          emit(
+            state.copyWith(status: HomeStatus.getCapitalSuccess, capital: r),
+          );
+        },
+      );
+    });
   }
 
   void getOfficerItems() async {
