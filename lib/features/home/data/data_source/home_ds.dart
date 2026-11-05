@@ -12,4 +12,6 @@ abstract class HomeDS {
   Future<Either<FirebaseErrors,void>>updateOfficer({required OfficerModel officer});
   Future<Either<FirebaseErrors,void>>deleteOfficer({required OfficerModel officer});
   Future<Either<FirebaseRemoteError,List<DispensingItemsModel>>>getOfficersDispensedItems(String officerId);
+  Either<SharedPreferencesErrors,num>getCapital();
+  Either<SharedPreferencesErrors,num>getOfficersAmount();
 }

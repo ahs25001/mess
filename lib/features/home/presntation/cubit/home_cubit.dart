@@ -38,6 +38,54 @@ class HomeCubit extends Cubit<HomeState> {
     HomeRepo homeRepo = HomeRepoImpl(
       HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
     );
+    var getOldCapitalResult = homeRepo.getCapital();
+    getOldCapitalResult.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.setCapitalFailure,
+            errorMessage: l.message,
+          ),
+        );
+        return;
+      },
+      (oldCapital)async {
+        if ((state.officers ?? []).isEmpty) {
+         await getOfficers();
+        }
+        num newTotalCapital =
+            (num.tryParse(updateCapitalController.text) ?? 0) ;
+        num difference = (newTotalCapital - oldCapital)*
+            (state.officers?.length ?? 0);
+        var getOfficersAmountResult = homeRepo.getOfficersAmount();
+        getOfficersAmountResult.fold(
+          (l) {
+            emit(
+              state.copyWith(
+                status: HomeStatus.setCapitalFailure,
+                errorMessage: l.message,
+              ),
+            );
+            return;
+          },
+          (oldAmount) async {
+            var saveNewAmountResult = await homeRepo.saveString(
+              key: SharedPreferencesKeys.officersBalance.value,
+              value: (oldAmount + difference).toString(),
+            );
+            saveNewAmountResult.fold((l) {
+              emit(
+                state.copyWith(
+                  status: HomeStatus.setCapitalFailure,
+                  errorMessage: l.message,
+                ),
+              );
+              return;
+            }, (_) {});
+          },
+        );
+      },
+    );
     var result = await homeRepo.saveString(
       key: SharedPreferencesKeys.capital.value,
       value: updateCapitalController.text,
@@ -74,7 +122,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  void getOfficers() async {
+  Future<void> getOfficers() async {
     HomeRepo repo = HomeRepoImpl(
       HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
     );

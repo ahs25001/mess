@@ -20,4 +20,7 @@ abstract class HomeRepo {
     required OfficerModel officer,
   });
   Future<Either<FirebaseRemoteError, List<DispensingItemsModel>>> getOfficersDispensedItems(String officerId);
+Either<SharedPreferencesErrors,num>getCapital();
+Either<SharedPreferencesErrors,num>getOfficersAmount();
+
 }

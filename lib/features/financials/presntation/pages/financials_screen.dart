@@ -199,47 +199,40 @@ class FinancialsScreen extends StatelessWidget {
                                         FinancialsCubit,
                                         FinancialsState
                                       >(
-                                        builder: (context, state) =>
-                                            RemainingAmountBottomSheet(
-                                              canteen:
-                                                  (state.canteenBalance ?? 0)
-                                                      .toDouble(),
-                                              total:
-                                                  ((state.capital ?? 0) *
-                                                          (state
-                                                                  .officers
-                                                                  ?.length ??
-                                                              0))
-                                                      .toDouble(),
-                                              cache:
-                                                  (((state.totalOfficersAmount ?? 0) +
-                                                          (state
-                                                                  .totalConsumerAmount
-                                                                   ??
-                                                              0))
-                                                      .toDouble()) -
-                                                  ((state.officersBalance ?? 0)
-                                                          .toDouble() +
-                                                      (state.hospitalityBalance ??
-                                                              0)
-                                                          .toDouble() +
-                                                      (state.invoicesBalance ??
-                                                              0)
-                                                          .toDouble() +
-                                                      (state.canteenBalance ??
-                                                              0)
-                                                          .toDouble()),
-                                              officersAmounts:
-                                                  (state.officersBalance ?? 0)
-                                                      .toDouble(),
-                                              hospitality:
-                                                  (state.hospitalityBalance ??
-                                                          0)
-                                                      .toDouble(),
-                                              invoices:
-                                                  (state.invoicesBalance ?? 0)
-                                                      .toDouble(),
-                                            ),
+                                        builder: (context, state) {
+                                          final double totalCapital =
+                                              ((state.capital ?? 0) *
+                                                      (state.officers?.length ??
+                                                          0))
+                                                  .toDouble();
+                                          final double officersAmounts =
+                                              (state.officersBalance ?? 0)
+                                                  .toDouble();
+                                          final double canteen =
+                                              (state.canteenBalance ?? 0)
+                                                  .toDouble();
+                                          final double hospitality =
+                                              (state.hospitalityBalance ?? 0)
+                                                  .toDouble();
+                                          final double invoices =
+                                              (state.invoicesBalance ?? 0)
+                                                  .toDouble();
+                                          final double cache =
+                                              totalCapital -
+                                              (officersAmounts +
+                                                  canteen +
+                                                  hospitality +
+                                                  invoices);
+
+                                          return RemainingAmountBottomSheet(
+                                            total: totalCapital,
+                                            cache: cache,
+                                            officersAmounts: officersAmounts,
+                                            canteen: canteen,
+                                            hospitality: hospitality,
+                                            invoices: invoices,
+                                          );
+                                        },
                                       ),
                                     );
                                   },

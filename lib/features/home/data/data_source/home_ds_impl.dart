@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:mess_app/core/errors/shared_preferences_errors.dart';
 import 'package:mess_app/core/firebase/firebase_firestore_manager.dart';
+import 'package:mess_app/core/utils/app_enums.dart';
 
 import '../../../../core/errors/firebase_errors.dart';
 import '../../../../core/models/food_model.dart';
@@ -73,5 +74,25 @@ class HomeDSImpl implements HomeDS {
    }catch(e){
      return Left(FirebaseRemoteError(error: e.toString()));
    }
+  }
+  @override
+  Either<SharedPreferencesErrors, num> getCapital() {
+   try{
+     var stringCapital = _sharedPreferencesManager.getString(SharedPreferencesKeys.capital.value);
+     num capital = num.tryParse(stringCapital)??0;
+     return Right(capital);
+   }catch(e){
+     return Left(SharedPreferencesLocalErrors(e.toString()));
+   }
+  }
+  @override
+  Either<SharedPreferencesErrors, num> getOfficersAmount() {
+    try{
+      var stringOfficersBalance = _sharedPreferencesManager.getString(SharedPreferencesKeys.officersBalance.value);
+      num officersBalance = num.tryParse(stringOfficersBalance)??0;
+      return Right(officersBalance);
+    }catch(e){
+      return Left(SharedPreferencesLocalErrors(e.toString()));
+    }
   }
 }
