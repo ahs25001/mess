@@ -9,6 +9,7 @@ import 'package:mess_app/features/home/data/repositories/home_repo_impl.dart';
 import 'package:mess_app/features/home/domain/repositories/home_repo.dart';
 
 import '../../../../core/utils/app_enums.dart';
+import '../../../dispensing_items/data/models/dispensing_items_model.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -37,6 +38,53 @@ class HomeCubit extends Cubit<HomeState> {
     HomeRepo homeRepo = HomeRepoImpl(
       HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
     );
+    var getOldCapitalResult = homeRepo.getCapital();
+    getOldCapitalResult.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.setCapitalFailure,
+            errorMessage: l.message,
+          ),
+        );
+        return;
+      },
+      (oldCapital) async {
+        if ((state.officers ?? []).isEmpty) {
+          await getOfficers();
+        }
+        num newTotalCapital = (num.tryParse(updateCapitalController.text) ?? 0);
+        num difference =
+            (newTotalCapital - oldCapital) * (state.officers?.length ?? 0);
+        var getOfficersAmountResult = homeRepo.getOfficersAmount();
+        getOfficersAmountResult.fold(
+          (l) {
+            emit(
+              state.copyWith(
+                status: HomeStatus.setCapitalFailure,
+                errorMessage: l.message,
+              ),
+            );
+            return;
+          },
+          (oldAmount) async {
+            var saveNewAmountResult = await homeRepo.saveString(
+              key: SharedPreferencesKeys.officersBalance.value,
+              value: (oldAmount + difference).toString(),
+            );
+            saveNewAmountResult.fold((l) {
+              emit(
+                state.copyWith(
+                  status: HomeStatus.setCapitalFailure,
+                  errorMessage: l.message,
+                ),
+              );
+              return;
+            }, (_) {});
+          },
+        );
+      },
+    );
     var result = await homeRepo.saveString(
       key: SharedPreferencesKeys.capital.value,
       value: updateCapitalController.text,
@@ -48,7 +96,7 @@ class HomeCubit extends Cubit<HomeState> {
           errorMessage: l.message,
         ),
       ),
-      (r) => emit(state.copyWith(status: HomeStatus.setCapitalSuccess)),
+      (r) => emit(state.copyWith(status: HomeStatus.setCapitalSuccess,capital:num.tryParse(updateCapitalController.text) )),
     );
   }
 
@@ -73,7 +121,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  void getOfficers() async {
+  Future<void> getOfficers() async {
     HomeRepo repo = HomeRepoImpl(
       HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
     );
@@ -161,8 +209,27 @@ class HomeCubit extends Cubit<HomeState> {
     HomeRepo repo = HomeRepoImpl(
       HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
     );
-    var result = await repo.deleteOfficer(
-      officer: state.selectedOfficer!,
+    var result = await repo.deleteOfficer(officer: state.selectedOfficer!);
+    var getOfficersAmountResult = repo.getOfficersAmount();
+    getOfficersAmountResult.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.deleteOfficerFailure,
+            errorMessage: l.message,
+          ),
+        );
+        return;
+      },
+      (officersBalance) {
+        if ((state.capital ?? 0) == 0) {
+          getCapital();
+        }
+        repo.saveString(
+          key: SharedPreferencesKeys.officersBalance.value,
+          value: (officersBalance - (state.capital ?? 0)).toString(),
+        );
+      },
     );
     result.fold(
       (l) {
@@ -179,6 +246,55 @@ class HomeCubit extends Cubit<HomeState> {
         militaryIDNumberController.clear();
         phoneController.clear();
         emit(state.copyWith(status: HomeStatus.deleteOfficerSuccess));
+      },
+    );
+  }
+
+  void getCapital() {
+    Future.microtask(() {
+      emit(state.copyWith(status: HomeStatus.getCapitalLoading));
+      HomeRepo homeRepo = HomeRepoImpl(
+        HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
+      );
+      var result = homeRepo.getCapital();
+      result.fold(
+        (l) {
+          print('fffffffffffffffffffffffffffffff ${l.message}');
+          emit(state.copyWith(status: HomeStatus.getCapitalFailure,errorMessage: l.message));
+        },
+        (r) {
+          emit(
+            state.copyWith(status: HomeStatus.getCapitalSuccess, capital: r),
+          );
+        },
+      );
+    });
+  }
+
+  void getOfficerItems() async {
+    emit(state.copyWith(status: HomeStatus.getOfficerItemsLoading));
+    HomeRepo repo = HomeRepoImpl(
+      HomeDSImpl(SharedPreferencesManager(), FirebaseFirestoreManager()),
+    );
+    var result = await repo.getOfficersDispensedItems(
+      state.selectedOfficer?.id ?? '',
+    );
+    result.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.getOfficersFailure,
+            errorMessage: l.error,
+          ),
+        );
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            status: HomeStatus.getOfficersSuccess,
+            officerItems: r,
+          ),
+        );
       },
     );
   }

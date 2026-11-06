@@ -10,6 +10,7 @@ import '../../features/financials/presntation/pages/financials_screen.dart';
 import '../../features/financials/presntation/pages/month_end_closing_screen.dart';
 import '../../features/home/presntation/pages/home_screen.dart';
 import '../../features/home/presntation/pages/inventory_of_items_screen.dart';
+import '../../features/home/presntation/pages/list_of_categories_for_officers_screen.dart';
 import '../../features/home/presntation/pages/update_officer_screen.dart';
 import '../../features/invoices/presentaion/pages/invoice_details_screen.dart';
 import '../../features/invoices/presentaion/pages/invoices_screen.dart';
@@ -25,49 +26,74 @@ class AppRoutes {
   static const String invoiceDetails = '/invoice_details';
   static const String monthEndClosing = '/month_end_closing';
   static const String closingOutTheMonths = '/closing_out_the_months';
-  static const String closingOutTheMonthsDetails = '/closingOutTheMonthsDetails';
-static const String updateOfficerScreen = '/update_officer_screen';
+  static const String closingOutTheMonthsDetails =
+      '/closingOutTheMonthsDetails';
+  static const String updateOfficerScreen = '/update_officer_screen';
+  static const String listOfCategoriesForOfficersScreen =
+      'ListOfCategoriesForOfficersScreen';
 }
+
 class Routes {
-  static Route onGenerateRoute(RouteSettings settings){
-    switch (settings.name){
+  static Route onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
       case AppRoutes.home:
-        return MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        );
-        case AppRoutes.dispensingItems:
+        return MaterialPageRoute(builder: (context) => const HomeScreen());
+      case AppRoutes.dispensingItems:
         return MaterialPageRoute(
           builder: (context) => const DispensingItemsScreen(),
         );
-        case AppRoutes.addNewInvoice:
+      case AppRoutes.addNewInvoice:
         return MaterialPageRoute(
           builder: (context) => const AddNewInvoiceScreen(),
         );
       case AppRoutes.addNewOfficer:
-        return MaterialPageRoute(builder:  (context) => const AddNewOfficerScreen(),);
-        case AppRoutes.financials:
-        return MaterialPageRoute(builder:  (context) => const FinancialsScreen(),);
-        case AppRoutes.invoices:
-        return MaterialPageRoute(builder:  (context) => const InvoicesScreen(),);
-        case AppRoutes.invoiceDetails:
-        return MaterialPageRoute(builder:  (context) =>  InvoiceDetailsScreen(invoice: settings.arguments as InvoiceModel,),);
-        case AppRoutes.inventoryOfItems:
-        return MaterialPageRoute(builder:  (context) => const InventoryOfItemsScreen(),);
-        case AppRoutes.monthEndClosing:
-        return MaterialPageRoute(builder:  (context) => const MonthEndClosingScreen(),);
-        case AppRoutes.closingOutTheMonths:
-        return MaterialPageRoute(builder:  (context) => const ClosingOutTheMonthsScreen(),);
-        case AppRoutes.closingOutTheMonthsDetails:
-        return MaterialPageRoute(builder:  (context) =>  ClosingOutTheMonthsDetailsScreen(monthEndClosingHistoryModel: settings.arguments as MonthEndClosingHistoryModel,),);
-       case AppRoutes.updateOfficerScreen:
-        return MaterialPageRoute(builder:  (context) => const UpdateOfficerScreen(),);
-        default:
         return MaterialPageRoute(
-          builder: (context) => const ErrorScreen(),
+          builder: (context) => const AddNewOfficerScreen(),
         );
+      case AppRoutes.financials:
+        return MaterialPageRoute(
+          builder: (context) => const FinancialsScreen(),
+        );
+      case AppRoutes.invoices:
+        return MaterialPageRoute(builder: (context) => const InvoicesScreen());
+      case AppRoutes.invoiceDetails:
+        return MaterialPageRoute(
+          builder: (context) =>
+              InvoiceDetailsScreen(invoice: settings.arguments as InvoiceModel),
+        );
+      case AppRoutes.inventoryOfItems:
+        return MaterialPageRoute(
+          builder: (context) => const InventoryOfItemsScreen(),
+        );
+      case AppRoutes.monthEndClosing:
+        return MaterialPageRoute(
+          builder: (context) => const MonthEndClosingScreen(),
+        );
+      case AppRoutes.closingOutTheMonths:
+        return MaterialPageRoute(
+          builder: (context) => const ClosingOutTheMonthsScreen(),
+        );
+      case AppRoutes.closingOutTheMonthsDetails:
+        return MaterialPageRoute(
+          builder: (context) => ClosingOutTheMonthsDetailsScreen(
+            monthEndClosingHistoryModel:
+                settings.arguments as MonthEndClosingHistoryModel,
+          ),
+        );
+      case AppRoutes.updateOfficerScreen:
+        return MaterialPageRoute(
+          builder: (context) => const UpdateOfficerScreen(),
+        );
+      case AppRoutes.listOfCategoriesForOfficersScreen:
+        return MaterialPageRoute(
+          builder: (context) => const ListOfCategoriesForOfficersScreen(),
+        );
+      default:
+        return MaterialPageRoute(builder: (context) => const ErrorScreen());
     }
   }
 }
+
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({super.key});
 

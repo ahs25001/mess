@@ -40,7 +40,9 @@ class FirebaseFirestoreManager {
     for (InvoiceModel invoice in invoices) {
       _firebaseFirestore.collection("Invoices").doc(invoice.id).delete();
     }
-  }Future<void> deleteHospitality() async {
+  }
+
+  Future<void> deleteHospitality() async {
     var docs = await _firebaseFirestore
         .collection("Hospitality")
         .withConverter(
@@ -53,7 +55,9 @@ class FirebaseFirestoreManager {
     for (DispensingItemsModel item in items) {
       _firebaseFirestore.collection("Hospitality").doc(item.id).delete();
     }
-  }Future<void> deleteCanteen() async {
+  }
+
+  Future<void> deleteCanteen() async {
     var docs = await _firebaseFirestore
         .collection("DispensingItemsToCanteen")
         .withConverter(
@@ -64,7 +68,10 @@ class FirebaseFirestoreManager {
         .get();
     List<DispensingItemsModel> items = docs.docs.map((e) => e.data()).toList();
     for (DispensingItemsModel item in items) {
-      _firebaseFirestore.collection("DispensingItemsToCanteen").doc(item.id).delete();
+      _firebaseFirestore
+          .collection("DispensingItemsToCanteen")
+          .doc(item.id)
+          .delete();
     }
   }
 
@@ -216,5 +223,29 @@ class FirebaseFirestoreManager {
         .get();
     var result = data.docs.map((e) => e.data()).toList();
     return result;
+  }
+
+  Future<List<DispensingItemsModel>> getOfficerDispensedItems(
+    String officerId,
+  ) async {
+    var response = await _firebaseFirestore
+        .collection("DispensingItemsToOfficer")
+        .orderBy('date',descending: true)
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              DispensingItemsModel.fromJson(snapshot.data()!),
+          toFirestore: (value, options) => value.toJson(),
+        )
+        .get();
+    List<DispensingItemsModel> allItems = response.docs
+        .map((e) => e.data())
+        .toList();
+    List<DispensingItemsModel> items = [];
+    for (var item in allItems) {
+      if (item.officerId == officerId || item.officersIds.contains(officerId)) {
+        items.add(item);
+      }
+    }
+    return items;
   }
 }

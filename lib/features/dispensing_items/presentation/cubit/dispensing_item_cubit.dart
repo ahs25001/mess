@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mess_app/core/models/food_model.dart';
 import 'package:mess_app/core/models/officer_model.dart';
@@ -97,6 +98,7 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
     }
     items.add(
       DispensingItemsModel(
+        date: Timestamp.now(),
         food: state.selectedFood!,
         officerId: state.selectedOfficer?.id ?? "",
         id: state.selectedFood?.id ?? "",
@@ -358,10 +360,11 @@ class DispensingItemCubit extends Cubit<DispensingItemState> {
     );
     num totalPrice = 0;
     for (DispensingItemsModel item in state.items ?? []) {
-      //todo update officers ids
+      List<String>officersIds=[];
       for (OfficerModel officer in state.selectedOfficers??[]) {
-        (item.officersIds).add(officer.id);
+        officersIds.add(officer.id);
       }
+      item.officersIds = officersIds;
       totalPrice += item.totalPrice;
       var result = await repo.addDispensingItemsToOfficer(
         dispensingItems: item,

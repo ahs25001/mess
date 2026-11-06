@@ -1,5 +1,8 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mess_app/core/utils/app_colors.dart';
+import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/core/widgets/custom_app_bar.dart';
 import 'package:mess_app/features/closing_out_the_months/presentation/cubit/closing_out_the_months_cubit.dart';
 
@@ -13,22 +16,34 @@ class ClosingOutTheMonthsScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => ClosingOutTheMonthsCubit(),
       child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
         body: Column(
           children: [
-            CustomAppBar(title: 'تقفيلات الشهور'),
+            const CustomAppBar(title: 'تقفيلات الشهور'),
             BlocBuilder<ClosingOutTheMonthsCubit, ClosingOutTheMonthsState>(
-              builder: (context, state) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: state.closingOutTheMonths?.length ?? 0,
-                    itemBuilder: (context, index) => MonthEndClosingItemListTile(monthEndClosingHistoryModel: state.closingOutTheMonths?[index],),
-                  ),
-                );
-              },
+                  builder: (context, state) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: state.closingOutTheMonths?.length ?? 0,
+                        itemBuilder: (context, index) =>
+                            FadeInUp(
+                              key: ValueKey(
+                                'closing_${index}_${state
+                                    .closingOutTheMonths?[index].date}',
+                              ),
+                              duration: const Duration(milliseconds: 350),
+                              child: MonthEndClosingItemListTile(
+                                monthEndClosingHistoryModel:
+                                state.closingOutTheMonths?[index],
+                              ),
+                            ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        );
   }
 }

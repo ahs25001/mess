@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,148 +65,176 @@ class AddNewOfficerScreen extends StatelessWidget {
           builder: (context, state) {
             return Form(
               key: context.read<AddNewOfficerCubit>().formKey,
-              child: Hero(
-                tag: HeroTags.addNewOfficer.value,
-                child: Material(
-                  color: AppColors.cardBackground,
-                  child: Column(
-                    children: [
-                      const CustomAppBar(title: "إضافة ضابط جديد"),
-                      Expanded(
+              child: Column(
+                children: [
+                  const CustomAppBar(title: "إضافة ضابط جديد"),
+                  Expanded(
                         child: SingleChildScrollView(
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: Column(
                             spacing: 10.h,
                             children: [
-                              CustomOfficerTextFieldData(
-                                onSubmitted: () {
-                                  context
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 350),
+                                delay: const Duration(milliseconds: 100),
+                                child: CustomOfficerTextFieldData(
+                                  onSubmitted: () {
+                                    context
+                                        .read<AddNewOfficerCubit>()
+                                        .militaryIDNumberFocusNode
+                                        .requestFocus();
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return "الاسم مطلوب";
+                                    }
+                                    return null;
+                                  },
+                                  controller: context
                                       .read<AddNewOfficerCubit>()
-                                      .militaryIDNumberFocusNode
-                                      .requestFocus();
-                                },
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return "الاسم مطلوب";
-                                  }
-                                  return null;
-                                },
-                                controller: context
-                                    .read<AddNewOfficerCubit>()
-                                    .nameController,
-                                focusNode: context
-                                    .read<AddNewOfficerCubit>()
-                                    .nameFocusNode,
-                                label: "الاسم",
-                                textInputAction: TextInputAction.next,
-                              ),
-                              CustomDropdown<String>(
-                                headerBuilder:
-                                    (context, selectedItem, enabled) => Text(
-                                      selectedItem,
-                                      style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.sp,
-                                      ),
-                                    ),
-                                initialItem:
-                                    state.selectedRank ??
-                                    AppConstants.rankList[9],
-                                decoration: CustomDropdownDecoration(
-                                  expandedBorderRadius: BorderRadius.circular(
-                                    10.r,
-                                  ),
-                                  expandedBorder: Border.all(
-                                    color: AppColors.primary,
-                                  ),
-                                  closedBorderRadius: BorderRadius.circular(
-                                    10.r,
-                                  ),
-                                  closedBorder: Border.all(
-                                    color: AppColors.borderColor,
-                                    width: 2.sp,
-                                  ),
+                                      .nameController,
+                                  focusNode: context
+                                      .read<AddNewOfficerCubit>()
+                                      .nameFocusNode,
+                                  label: "الاسم",
+                                  textInputAction: TextInputAction.next,
                                 ),
-                                items: AppConstants.rankList,
-                                onChanged: (rank) {
-                                  context
+                              ),
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 350),
+                                delay: const Duration(milliseconds: 150),
+                                child: CustomDropdown<String>(
+                                  headerBuilder:
+                                      (context, selectedItem, enabled) => Text(
+                                        selectedItem,
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                  initialItem:
+                                      state.selectedRank ??
+                                      AppConstants.rankList[9],
+                                  decoration: CustomDropdownDecoration(
+                                    expandedBorderRadius: BorderRadius.circular(
+                                      10.r,
+                                    ),
+                                    expandedBorder: Border.all(
+                                      color: AppColors.primary,
+                                    ),
+                                    closedBorderRadius: BorderRadius.circular(
+                                      10.r,
+                                    ),
+                                    closedBorder: Border.all(
+                                      color: AppColors.borderColor,
+                                      width: 2.sp,
+                                    ),
+                                  ),
+                                  items: AppConstants.rankList,
+                                  onChanged: (rank) {
+                                    context
+                                        .read<AddNewOfficerCubit>()
+                                        .selectedRank(rank ?? "");
+                                  },
+                                ),
+                              ),
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 350),
+                                delay: const Duration(milliseconds: 200),
+                                child: CustomOfficerTextFieldData(
+                                  onSubmitted: () {
+                                    context
+                                        .read<AddNewOfficerCubit>()
+                                        .phoneFocusNode
+                                        .requestFocus();
+                                  },
+                                  validator: (value) {
+                                    if (!(RegExp(
+                                      r'^\d+$',
+                                    ).hasMatch(value ?? ""))) {
+                                      return 'الرقم غير صالح';
+                                    }
+                                    return null;
+                                  },
+                                  controller: context
                                       .read<AddNewOfficerCubit>()
-                                      .selectedRank(rank ?? "");
-                                },
-                              ),
-                              CustomOfficerTextFieldData(
-                                onSubmitted: () {
-                                  context
+                                      .militaryIDNumberController,
+                                  focusNode: context
                                       .read<AddNewOfficerCubit>()
-                                      .phoneFocusNode
-                                      .requestFocus();
-                                },
-                                validator: (value) {
-                                  if (!(RegExp(
-                                    r'^\d+$',
-                                  ).hasMatch(value ?? ""))) {
-                                    return 'الرقم غير صالح';
-                                  }
-                                  return null;
-                                },
-                                controller: context
-                                    .read<AddNewOfficerCubit>()
-                                    .militaryIDNumberController,
-                                focusNode: context
-                                    .read<AddNewOfficerCubit>()
-                                    .militaryIDNumberFocusNode,
-                                label: "الرقم العسكري",
-                                isNumber: true,
-                                textInputAction: TextInputAction.next,
+                                      .militaryIDNumberFocusNode,
+                                  label: "الرقم العسكري",
+                                  isNumber: true,
+                                  textInputAction: TextInputAction.next,
+                                ),
                               ),
-                              CustomOfficerTextFieldData(
-                                onSubmitted: () {
-                                  FocusScope.of(context).unfocus();
-                                },
-                                maxLength: 11,
-                                validator: (value) {
-                                  if (!(RegExp(
-                                    r'^01[0125]\d{8}$',
-                                  ).hasMatch(value ?? ""))) {
-                                    return 'أدخل رقم هاتف صحيح';
-                                  }
-                                  return null;
-                                },
-                                controller: context
-                                    .read<AddNewOfficerCubit>()
-                                    .phoneController,
-                                focusNode: context
-                                    .read<AddNewOfficerCubit>()
-                                    .phoneFocusNode,
-                                isNumber: true,
-                                label: "رقم التليفون",
-                                textInputAction: TextInputAction.done,
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 350),
+                                delay: const Duration(milliseconds: 250),
+                                child: CustomOfficerTextFieldData(
+                                  onSubmitted: () {
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  maxLength: 11,
+                                  validator: (value) {
+                                    if (!(RegExp(
+                                      r'^01[0125]\d{8}$',
+                                    ).hasMatch(value ?? ""))) {
+                                      return 'أدخل رقم هاتف صحيح';
+                                    }
+                                    return null;
+                                  },
+                                  controller: context
+                                      .read<AddNewOfficerCubit>()
+                                      .phoneController,
+                                  focusNode: context
+                                      .read<AddNewOfficerCubit>()
+                                      .phoneFocusNode,
+                                  isNumber: true,
+                                  label: "رقم التليفون",
+                                  textInputAction: TextInputAction.done,
+                                ),
                               ),
-                              FilledButton(onPressed: (){
-                                if(context.read<AddNewOfficerCubit>().formKey.currentState!.validate()){
-                                  context.read<AddNewOfficerCubit>().addOfficer();
-                                }
-                              },
+                              FadeInUp(
+                                duration: const Duration(milliseconds: 350),
+                                delay: const Duration(milliseconds: 300),
+                                child: FilledButton(
+                                  onPressed: () {
+                                    if (context
+                                        .read<AddNewOfficerCubit>()
+                                        .formKey
+                                        .currentState!
+                                        .validate()) {
+                                      context
+                                          .read<AddNewOfficerCubit>()
+                                          .addOfficer();
+                                    }
+                                  },
                                   style: FilledButton.styleFrom(
                                     backgroundColor: AppColors.primary,
                                     minimumSize: Size(double.infinity, 40.h),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.r),
                                     ),
-                                  ), child: Text("إضافة الضابط",style: TextStyle(color: AppColors.white,fontWeight: FontWeight.bold,fontSize: 16.sp),))
+                                  ),
+                                  child: Text(
+                                    "إضافة الضابط",
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-            );
+                );
           },
-        ),
-      ),
-    );
+        )));
   }
 }

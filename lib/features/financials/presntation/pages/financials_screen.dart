@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,16 +18,13 @@ class FinancialsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Hero(
-        tag: HeroTags.financials.value,
-        child: Material(
-          color: AppColors.backgroundCanvas,
-          child: BlocProvider(
-            create: (context) => FinancialsCubit()
-              ..getOfficers()
-              ..getCapital(),
-            child: BlocConsumer<FinancialsCubit, FinancialsState>(
+    return BlocProvider(
+      create: (context) => FinancialsCubit()
+        ..getOfficers()
+        ..getCapital(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
+        body: BlocConsumer<FinancialsCubit, FinancialsState>(
               listener: (context, state) {
                 if (state.status == FinancialsStatus.addMoneyLoading) {
                   showDialog(
@@ -121,167 +119,172 @@ class FinancialsScreen extends StatelessWidget {
                       child: Column(
                         spacing: 10.h,
                         children: [
-                          CustomListTile(
-                            onTab: () {
-                              showModalBottomSheet(
-                                showDragHandle: true,
-                                isScrollControlled: true,
-                                enableDrag: true,
-                                context: context,
-                                builder: (sheetContext) {
-                                  return BlocProvider.value(
-                                    value: context.read<FinancialsCubit>(),
-                                    child:
-                                        BlocBuilder<
-                                          FinancialsCubit,
-                                          FinancialsState
-                                        >(
-                                          builder: (context, state) {
-                                            return AddMoneyBottomSheet(
-                                              changeAddMoneyMode: (mode) {
-                                                context
-                                                    .read<FinancialsCubit>()
-                                                    .changeAddMoneyMode(mode);
-                                              },
-                                              addMoneyMode:
-                                                  state.addMoneyMode ??
-                                                  AddMoneyMode.init,
-                                              selectedOfficer:
-                                                  state.selectedOfficer,
-                                              changeSelectedOfficer: (officer) {
-                                                context
-                                                    .read<FinancialsCubit>()
-                                                    .changeSelectedOfficer(
-                                                      officer,
-                                                    );
-                                              },
-
-                                              amountController: context
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 400),
+                            delay: const Duration(milliseconds: 100),
+                            child: CustomListTile(
+                              onTab: () {
+                                showModalBottomSheet(
+                                  showDragHandle: true,
+                                  isScrollControlled: true,
+                                  enableDrag: true,
+                                  context: context,
+                                  builder: (sheetContext) {
+                                    return BlocProvider.value(
+                                      value: context.read<FinancialsCubit>(),
+                                      child: BlocBuilder<
+                                        FinancialsCubit,
+                                        FinancialsState
+                                      >(
+                                        builder: (context, state) {
+                                          return AddMoneyBottomSheet(
+                                            changeAddMoneyMode: (mode) {
+                                              context
                                                   .read<FinancialsCubit>()
-                                                  .amountController,
-                                              officers: state.officers ?? [],
-                                              onSubmit: () => _onAddMoneySubmit(
-                                                context,
-                                                state,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                  );
-                                },
-                              );
-                            },
-                            title: 'تحصيل مبلغ',
-                            animatedIconPath:
-                                'assets/json/add_money_animated_icon.json',
+                                                  .changeAddMoneyMode(mode);
+                                            },
+                                            addMoneyMode:
+                                                state.addMoneyMode ??
+                                                AddMoneyMode.init,
+                                            selectedOfficer:
+                                                state.selectedOfficer,
+                                            changeSelectedOfficer: (officer) {
+                                              context
+                                                  .read<FinancialsCubit>()
+                                                  .changeSelectedOfficer(
+                                                    officer,
+                                                  );
+                                            },
+
+                                            amountController: context
+                                                .read<FinancialsCubit>()
+                                                .amountController,
+                                            officers: state.officers ?? [],
+                                            onSubmit: () => _onAddMoneySubmit(
+                                              context,
+                                              state,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              title: 'تحصيل مبلغ',
+                              animatedIconPath:
+                                  'assets/json/add_money_animated_icon.json',
+                            ),
                           ),
-                          CustomListTile(
-                            onTab: () {
-                              showModalBottomSheet(
-                                context: context,
-                                showDragHandle: true,
-                                enableDrag: true,
-                                builder: (contextSheet) {
-                                  return BlocProvider.value(
-                                    value: context.read<FinancialsCubit>()
-                                      ..getOfficersBalance()
-                                      ..getHospitalityBalance()
-                                      ..getInvoicesBalance()
-                                      ..getCanteenBalance(),
-                                    child:
-                                        BlocBuilder<
-                                          FinancialsCubit,
-                                          FinancialsState
-                                        >(
-                                          builder: (context, state) =>
-                                              RemainingAmountBottomSheet(
-                                                canteen:
-                                                    (state.canteenBalance ?? 0)
-                                                        .toDouble(),
-                                                total:
-                                                    ((state.capital ?? 0) *
-                                                            (state
-                                                                    .officers
-                                                                    ?.length ??
-                                                                0))
-                                                        .toDouble(),
-                                                cache:
-                                                    (((state.capital ?? 0) *
-                                                            (state
-                                                                    .officers
-                                                                    ?.length ??
-                                                                0))
-                                                        .toDouble()) -
-                                                    ((state.officersBalance ??
-                                                                0)
-                                                            .toDouble() +
-                                                        (state.hospitalityBalance ??
-                                                                0)
-                                                            .toDouble() +
-                                                        (state.invoicesBalance ??
-                                                                0)
-                                                            .toDouble() +
-                                                        (state.canteenBalance ??
-                                                                0)
-                                                            .toDouble()),
-                                                officersAmounts:
-                                                    (state.officersBalance ?? 0)
-                                                        .toDouble(),
-                                                hospitality:
-                                                    (state.hospitalityBalance ??
-                                                            0)
-                                                        .toDouble(),
-                                                invoices:
-                                                    (state.invoicesBalance ?? 0)
-                                                        .toDouble(),
-                                              ),
-                                        ),
-                                  );
-                                },
-                              );
-                            },
-                            title: 'المبلغ المتبقي',
-                            animatedIconPath:
-                                'assets/json/the_remaining_amount_animated_icon.json',
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 400),
+                            delay: const Duration(milliseconds: 200),
+                            child: CustomListTile(
+                              onTab: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  showDragHandle: true,
+                                  enableDrag: true,
+                                  builder: (contextSheet) {
+                                    return BlocProvider.value(
+                                      value: context.read<FinancialsCubit>()
+                                        ..getOfficersBalance()
+                                        ..getHospitalityBalance()
+                                        ..getInvoicesBalance()
+                                        ..getCanteenBalance()..getTotalAmountAndConsumer(),
+                                      child: BlocBuilder<
+                                        FinancialsCubit,
+                                        FinancialsState
+                                      >(
+                                        builder: (context, state) {
+                                          final double totalCapital =
+                                              ((state.capital ?? 0) *
+                                                      (state.officers?.length ??
+                                                          0))
+                                                  .toDouble();
+                                          final double officersAmounts =
+                                              (state.officersBalance ?? 0)
+                                                  .toDouble();
+                                          final double canteen =
+                                              (state.canteenBalance ?? 0)
+                                                  .toDouble();
+                                          final double hospitality =
+                                              (state.hospitalityBalance ?? 0)
+                                                  .toDouble();
+                                          final double invoices =
+                                              (state.invoicesBalance ?? 0)
+                                                  .toDouble();
+                                          final double cache =
+                                              totalCapital -
+                                              (officersAmounts +
+                                                  canteen +
+                                                  hospitality +
+                                                  invoices);
+
+                                          return RemainingAmountBottomSheet(
+                                            total: totalCapital,
+                                            cache: cache,
+                                            officersAmounts: officersAmounts,
+                                            canteen: canteen,
+                                            hospitality: hospitality,
+                                            invoices: invoices,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              title: 'المبلغ المتبقي',
+                              animatedIconPath:
+                                  'assets/json/the_remaining_amount_animated_icon.json',
+                            ),
                           ),
-                          CustomListTile(
-                            onTab: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.monthEndClosing,
-                              );
-                            },
-                            title: 'تقفيل الشهر',
-                            animatedIconPath:
-                                'assets/json/closing_accounts_animated_icon.json',
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 400),
+                            delay: const Duration(milliseconds: 300),
+                            child: CustomListTile(
+                              onTab: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.monthEndClosing,
+                                );
+                              },
+                              title: 'تقفيل الشهر',
+                              animatedIconPath:
+                                  'assets/json/closing_accounts_animated_icon.json',
+                            ),
                           ),
-                          CustomListTile(
-                            onTab: () {
-                              showModalBottomSheet(
-                                context: context,
-                                showDragHandle: true,
-                                enableDrag: true,
-                                builder: (contextSheet) {
-                                  return BlocProvider.value(
-                                    value: context.read<FinancialsCubit>(),
-                                    child:
-                                        BlocBuilder<
-                                          FinancialsCubit,
-                                          FinancialsState
-                                        >(
-                                          builder: (context, state) =>
-                                              BalanceBottomSheet(
-                                                capital: state.capital ?? 0,
-                                                officers: state.officers,
-                                              ),
-                                        ),
-                                  );
-                                },
-                              );
-                            },
-                            title: 'رصيد الضباط',
-                            animatedIconPath:
-                                'assets/json/oficerres_amount_animated_icon.json',
+                          FadeInUp(
+                            duration: const Duration(milliseconds: 400),
+                            delay: const Duration(milliseconds: 400),
+                            child: CustomListTile(
+                              onTab: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  showDragHandle: true,
+                                  enableDrag: true,
+                                  builder: (contextSheet) {
+                                    return BlocProvider.value(
+                                      value: context.read<FinancialsCubit>(),
+                                      child: BlocBuilder<
+                                        FinancialsCubit,
+                                        FinancialsState
+                                      >(
+                                        builder: (context, state) =>
+                                            BalanceBottomSheet(
+                                              capital: state.capital ?? 0,
+                                              officers: state.officers,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              title: 'رصيد الضباط',
+                              animatedIconPath:
+                                  'assets/json/oficerres_amount_animated_icon.json',
+                            ),
                           ),
                         ],
                       ),
@@ -291,9 +294,7 @@ class FinancialsScreen extends StatelessWidget {
               },
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   void _onAddMoneySubmit(BuildContext context, FinancialsState state) {

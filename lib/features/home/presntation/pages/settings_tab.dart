@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,58 +18,72 @@ class SettingsTab extends StatelessWidget {
       child: Column(
         spacing: 10.h,
         children: [
-          CustomListTile(
-            title: 'تعديل بيانات ضابط',
-            animatedIconPath: 'assets/json/profile setup.json',
-            onTab: () {
-              Navigator.pushNamed(context, AppRoutes.updateOfficerScreen);
-            },
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 100),
+            child: CustomListTile(
+              title: 'تعديل بيانات ضابط',
+              animatedIconPath: 'assets/json/profile setup.json',
+              onTab: () {
+                Navigator.pushNamed(context, AppRoutes.updateOfficerScreen);
+              },
+            ),
           ),
-          CustomListTile(
-            title: 'تعديل التأسيس',
-            animatedIconPath: 'assets/json/money_animated_icon.json',
-            onTab: () {
-              showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (dialogContext) => BlocProvider.value(
-                  value: context.read<HomeCubit>(),
-                  child: BlocBuilder<HomeCubit, HomeState>(
-                    builder: (context, state) {
-                      return UpdateCapitalDialog(
-                        controller: context
-                            .read<HomeCubit>()
-                            .updateCapitalController,
-                        onSave: () {
-                          if(context.read<HomeCubit>().updateCapitalController.text.trim().isNotEmpty) {
-                            context.read<HomeCubit>().setCapital();
-                          }else{
-                            ScaffoldMessenger.of(dialogContext).showSnackBar(
-                              SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: AppColors.red,
-                                content: Text(
-                                 'أدخل التأسيس',
-                                  style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 14.sp,
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            delay: const Duration(milliseconds: 200),
+            child: CustomListTile(
+              title: 'تعديل التأسيس',
+              animatedIconPath: 'assets/json/money_animated_icon.json',
+              onTab: () {
+                showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (dialogContext) => BlocProvider.value(
+                    value: context.read<HomeCubit>(),
+                    child: BlocBuilder<HomeCubit, HomeState>(
+                      builder: (context, state) {
+                        return UpdateCapitalDialog(
+                          controller: context
+                              .read<HomeCubit>()
+                              .updateCapitalController,
+                          onSave: () {
+                            if (context
+                                    .read<HomeCubit>()
+                                    .updateCapitalController
+                                    .text
+                                    .trim()
+                                    .isNotEmpty &&
+                                context
+                                        .read<HomeCubit>()
+                                        .updateCapitalController
+                                        .text
+                                        .trim() !=
+                                    '0') {
+                              context.read<HomeCubit>().setCapital();
+                            } else {
+                              ScaffoldMessenger.of(dialogContext).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: AppColors.red,
+                                  content: Text(
+                                    'أدخل التأسيس',
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: 14.sp,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    },
+                              );
+                            }
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-          CustomListTile(
-            title: 'تعديل بيانات الوحدة',
-            animatedIconPath: 'assets/json/update-data.json',
-            onTab: () {},
+                );
+              },
+            ),
           ),
         ],
       ),

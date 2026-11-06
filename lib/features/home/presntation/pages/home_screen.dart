@@ -7,6 +7,7 @@ import 'package:mess_app/core/utils/app_enums.dart';
 import 'package:mess_app/features/home/presntation/cubit/home_cubit.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../widgets/add_capital_dialog.dart';
 import '../widgets/curved_header.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,10 +15,53 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-  create: (context) => HomeCubit(),
+  create: (context) => HomeCubit()..getCapital(),
   child: BlocConsumer<HomeCubit, HomeState>(
     listener: (context, state) {
-      if(state.status==HomeStatus.setCapitalLoading){
+      if (state.status == HomeStatus.getCapitalSuccess) {
+        if ((state.capital ?? 0) == 0) {
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (dialogContext) => BlocProvider.value(
+              value: context.read<HomeCubit>(),
+              child: BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  return AddCapitalDialog(
+                    controller: context
+                        .read<HomeCubit>()
+                        .updateCapitalController,
+                    onSave: () {
+                      if (context
+                          .read<HomeCubit>()
+                          .updateCapitalController
+                          .text
+                          .trim()
+                          .isNotEmpty) {
+                        context.read<HomeCubit>().setCapital();
+                      } else {
+                        ScaffoldMessenger.of(dialogContext).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: AppColors.red,
+                            content: Text(
+                              'أدخل التأسيس',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+          );
+        }
+      } else if (state.status == HomeStatus.setCapitalLoading) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -34,9 +78,9 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         );
-      }else if (state.status==HomeStatus.setCapitalSuccess){
+      } else if (state.status == HomeStatus.setCapitalSuccess) {
         Navigator.pop(context); // Dismiss loading dialog
-        Navigator.pop(context); // Dismiss dialog
+        Navigator.pop(context); // Dismiss capital dialog
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: AppColors.invoiceAccent,
@@ -49,14 +93,17 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         );
-      }else if (state.status==HomeStatus.setCapitalFailure){
-        Navigator.pop(context); // Dismiss loading dialog
+      } else if (state.status == HomeStatus.setCapitalFailure ||
+          state.status == HomeStatus.getCapitalFailure) {
+        if (state.status == HomeStatus.setCapitalFailure) {
+          Navigator.pop(context); // Dismiss loading dialog
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
             backgroundColor: AppColors.red,
             content: Text(
-              state.errorMessage ?? "",
+              state.errorMessage ?? "حدث خطأ ما",
               style: TextStyle(
                 color: AppColors.white,
                 fontSize: 14.sp,

@@ -24,6 +24,7 @@ class MonthEndClosingScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => FinancialsCubit()..createMonthEndClosing(),
       child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
         body: Column(
           children: [
             CustomAppBar(title: 'تقفيل الشهر'),
@@ -33,6 +34,7 @@ class MonthEndClosingScreen extends StatelessWidget {
                     FinancialsStatus.saveMonthEndClosingSuccess) {
                   Navigator.pop(context); // Dismiss loading dialog
                   Navigator.pop(context); // Dismiss bottom sheet
+                  Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: AppColors.invoiceAccent,

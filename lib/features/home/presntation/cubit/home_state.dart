@@ -9,32 +9,40 @@ class HomeState {
   List<OfficerModel?>?officers;
   OfficerModel? selectedOfficer;
   bool? isOfficerActive;
+  num?capital;
+  List<DispensingItemsModel?>? officerItems;
   HomeState({
     this.status,
     this.currentIndex,
+    this.capital,
     this.selectedOfficer,
     this.isOfficerActive,
     this.errorMessage,
     this.officers,
     this.selectedRank,
+    this.officerItems,
     this.food,
   });
   HomeState copyWith({
     HomeStatus? status,
+    num ?capital,
     String? selectedRank,
     bool? isOfficerActive,
     String? errorMessage,
     OfficerModel? selectedOfficer,
     List<OfficerModel?>? officers,
+    List<DispensingItemsModel>?officerItems,
     int? currentIndex,
     List<FoodModel?>? food,
   }) => HomeState(
     status: status ?? this.status,
+    officerItems: officerItems ?? this.officerItems,
     food: food ?? this.food,
     isOfficerActive: isOfficerActive ?? this.isOfficerActive,
     selectedOfficer: selectedOfficer ?? this.selectedOfficer,
     officers: officers ?? this.officers,
     selectedRank: selectedRank ?? this.selectedRank,
+    capital: capital ?? this.capital,
     errorMessage: errorMessage ?? this.errorMessage,
     currentIndex: currentIndex ?? this.currentIndex,
   );

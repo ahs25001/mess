@@ -3,6 +3,7 @@ import 'package:mess_app/core/errors/shared_preferences_errors.dart';
 import '../../../../core/errors/firebase_errors.dart';
 import '../../../../core/models/food_model.dart';
 import '../../../../core/models/officer_model.dart';
+import '../../../dispensing_items/data/models/dispensing_items_model.dart';
 
 abstract class HomeDS {
   Future<Either<SharedPreferencesLocalErrors, void>> saveString({required String key, required String value});
@@ -10,4 +11,7 @@ abstract class HomeDS {
   Future<Either<FirebaseErrors,List<OfficerModel?>>>getOfficers();
   Future<Either<FirebaseErrors,void>>updateOfficer({required OfficerModel officer});
   Future<Either<FirebaseErrors,void>>deleteOfficer({required OfficerModel officer});
+  Future<Either<FirebaseRemoteError,List<DispensingItemsModel>>>getOfficersDispensedItems(String officerId);
+  Either<SharedPreferencesErrors,num>getCapital();
+  Either<SharedPreferencesErrors,num>getOfficersAmount();
 }
