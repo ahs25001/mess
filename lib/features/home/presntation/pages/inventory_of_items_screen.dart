@@ -12,16 +12,13 @@ class InventoryOfItemsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Hero(
-        tag: HeroTags.inventoryOfItems.value,
-        child: Material(
-          color: AppColors.backgroundCanvas,
-          child: BlocProvider(
-            create: (context) => HomeCubit()..getFood(),
-            child: Column(
-              children: [
-                CustomAppBar(title: "جرد الأصناف"),
+    return BlocProvider(
+      create: (context) => HomeCubit()..getFood(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
+        body: Column(
+          children: [
+            CustomAppBar(title: "جرد الأصناف"),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 20.w),
                   height: 35.h,
@@ -134,8 +131,6 @@ class InventoryOfItemsScreen extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

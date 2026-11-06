@@ -20,7 +20,7 @@ void main() async {
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
 
-  SharedPreferencesManager.init();
+  await SharedPreferencesManager.init();
   runApp(const MyApp());
 }
 

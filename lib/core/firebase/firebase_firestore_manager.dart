@@ -230,7 +230,7 @@ class FirebaseFirestoreManager {
   ) async {
     var response = await _firebaseFirestore
         .collection("DispensingItemsToOfficer")
-        .orderBy('date')
+        .orderBy('date',descending: true)
         .withConverter(
           fromFirestore: (snapshot, options) =>
               DispensingItemsModel.fromJson(snapshot.data()!),

@@ -30,12 +30,7 @@ class FinancialsCubit extends Cubit<FinancialsState> {
   }
 
   void changeAddMoneyMode(AddMoneyMode mode) {
-    emit(
-      state.copyWith(
-        addMoneyMode: mode,
-        status: FinancialsStatus.initial,
-      ),
-    );
+    emit(state.copyWith(addMoneyMode: mode, status: FinancialsStatus.initial));
   }
 
   Future<void> getOfficers() async {
@@ -58,6 +53,38 @@ class FinancialsCubit extends Cubit<FinancialsState> {
           state.copyWith(
             status: FinancialsStatus.getOfficersSuccess,
             officers: r,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> getOfficersForClosing() async {
+    emit(state.copyWith(status: FinancialsStatus.getOfficersLoading));
+    FinancialsRepo financialsRepo = FinancialsRepoImpl(
+      FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
+    );
+    var result = await financialsRepo.getOfficers();
+    result.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getOfficersFailure,
+            errorMessage: l.error,
+          ),
+        );
+      },
+      (officers) {
+        List<OfficerModel> activeOfficers = [];
+        for (OfficerModel officer in officers ?? []) {
+          if (officer.isActive) {
+            activeOfficers.add(officer);
+          }
+        }
+        emit(
+          state.copyWith(
+            status: FinancialsStatus.getOfficersSuccess,
+            officers: activeOfficers,
           ),
         );
       },
@@ -139,9 +166,8 @@ class FinancialsCubit extends Cubit<FinancialsState> {
               (r) async {
                 num total =
                     (r ?? 0) - (num.tryParse(amountController.text) ?? 0);
-                var setOfficersBalanceResult = await financialsRepo.setOfficersBalance(
-                  total,
-                );
+                var setOfficersBalanceResult = await financialsRepo
+                    .setOfficersBalance(total);
                 setOfficersBalanceResult.fold(
                   (l) {
                     emit(
@@ -207,22 +233,28 @@ class FinancialsCubit extends Cubit<FinancialsState> {
         );
     }
   }
-void getTotalAmountAndConsumer() async {
-  emit(state.copyWith(status: FinancialsStatus.getTotalAmountAndConsumerLoading));
-  if(state.officers==null||state.officers!.isEmpty){
-    getOfficers();
+
+  void getTotalAmountAndConsumer() async {
+    emit(
+      state.copyWith(status: FinancialsStatus.getTotalAmountAndConsumerLoading),
+    );
+    if (state.officers == null || state.officers!.isEmpty) {
+      getOfficers();
+    }
+    num totalAmount = 0, totalConsumer = 0;
+    for (OfficerModel officer in state.officers!) {
+      totalAmount += officer.amount;
+      totalConsumer += officer.consumer;
+    }
+    emit(
+      state.copyWith(
+        status: FinancialsStatus.getTotalAmountAndConsumerSuccess,
+        totalOfficersAmount: totalAmount,
+        totalConsumerAmount: totalConsumer,
+      ),
+    );
   }
-  num totalAmount = 0,totalConsumer = 0;
-  for(OfficerModel officer in state.officers!){
-    totalAmount+=officer.amount;
-    totalConsumer+=officer.consumer;
-  }
-  emit(state.copyWith(
-    status: FinancialsStatus.getTotalAmountAndConsumerSuccess,
-    totalOfficersAmount: totalAmount,
-    totalConsumerAmount: totalConsumer,
-  ));
-}
+
   Future<void> getCapital() async {
     FinancialsRepo repo = FinancialsRepoImpl(
       FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
@@ -401,7 +433,7 @@ void getTotalAmountAndConsumer() async {
   void createMonthEndClosing() async {
     emit(state.copyWith(status: FinancialsStatus.createMonthEndClosingLoading));
     await getCapital();
-    await getOfficers();
+    await getOfficersForClosing();
     getHospitalityBalance();
     getCanteenBalance();
     await _getInvoices();
@@ -440,21 +472,18 @@ void getTotalAmountAndConsumer() async {
     }
 
     double consumerAndHospitality = consumer + hospitality;
-    variable = consumerAndHospitality > 0 ? (variable / consumerAndHospitality) : 0.0;
+    variable = consumerAndHospitality > 0
+        ? (variable / consumerAndHospitality)
+        : 0.0;
 
-    int officersCount = 0;
-    for (OfficerModel officer in state.officers ?? []) {
-      if(officer.isActive) {
-        officersCount++;
-      }
-    }
+    int officersCount = state.officers?.length ?? 0;
     perishes = officersCount > 0 ? (perishes / officersCount) : 0.0;
     fixed = officersCount > 0 ? (fixed / officersCount) : 0.0;
 
     MonthEndClosingModel monthEndClosing = MonthEndClosingModel(
       officers: state.officers ?? [],
-      hospitality: hospitality+(state.hospitalityBalance??0),
-      canteen: canteen+(state.canteenBalance??0),
+      hospitality: hospitality + (state.hospitalityBalance ?? 0),
+      canteen: canteen + (state.canteenBalance ?? 0),
       fixed: fixed,
       perishes: perishes,
       variable: variable,
@@ -475,10 +504,11 @@ void getTotalAmountAndConsumer() async {
       FinancialsDsImpl(FirebaseFirestoreManager(), SharedPreferencesManager()),
     );
     for (OfficerModel? officer in (state.monthEndClosing?.officers) ?? []) {
+      var consumed = officer?.consumer;
       officer?.consumer = 0;
       var updateOfficerResult = await financialsRepo.spendMoney(
         amount:
-            ((state.monthEndClosing?.variable ?? 0) * (officer!.consumer) +
+            ((state.monthEndClosing?.variable ?? 0) * (consumed ?? 0) +
                     (state.monthEndClosing?.fixed ?? 0) +
                     (state.monthEndClosing?.perishes ?? 0))
                 .toString(),

@@ -259,7 +259,8 @@ class HomeCubit extends Cubit<HomeState> {
       var result = homeRepo.getCapital();
       result.fold(
         (l) {
-          emit(state.copyWith(status: HomeStatus.getCapitalFailure));
+          print('fffffffffffffffffffffffffffffff ${l.message}');
+          emit(state.copyWith(status: HomeStatus.getCapitalFailure,errorMessage: l.message));
         },
         (r) {
           emit(

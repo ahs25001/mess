@@ -13,17 +13,14 @@ class ClosingOutTheMonthsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Hero(
-        tag: HeroTags.closingOutTheMonths.value,
-        child: Material(
-          color: AppColors.backgroundCanvas,
-          child: BlocProvider(
-            create: (context) => ClosingOutTheMonthsCubit(),
-            child: Column(
-              children: [
-                const CustomAppBar(title: 'تقفيلات الشهور'),
-                BlocBuilder<ClosingOutTheMonthsCubit, ClosingOutTheMonthsState>(
+    return BlocProvider(
+      create: (context) => ClosingOutTheMonthsCubit(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
+        body: Column(
+          children: [
+            const CustomAppBar(title: 'تقفيلات الشهور'),
+            BlocBuilder<ClosingOutTheMonthsCubit, ClosingOutTheMonthsState>(
                   builder: (context, state) {
                     return Expanded(
                       child: ListView.builder(
@@ -47,8 +44,6 @@ class ClosingOutTheMonthsScreen extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

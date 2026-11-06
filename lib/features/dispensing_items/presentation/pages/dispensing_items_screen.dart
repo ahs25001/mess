@@ -27,15 +27,12 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Hero(
-        tag: HeroTags.disburse.value,
-        child: Material(
-          color: AppColors.backgroundCanvas,
-          child: BlocProvider(
-            create: (context) => DispensingItemCubit(),
-            child: BlocConsumer<DispensingItemCubit, DispensingItemState>(
+    return BlocProvider(
+      create: (context) => DispensingItemCubit(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
+        resizeToAvoidBottomInset: false,
+        body: BlocConsumer<DispensingItemCubit, DispensingItemState>(
               listener: (context, state) {
                 print(state.dispensingItemStatus);
                 if (state.dispensingItemStatus ==
@@ -375,8 +372,6 @@ class _DispensingItemsScreenState extends State<DispensingItemsScreen>
               },
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

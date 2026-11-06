@@ -18,16 +18,13 @@ class FinancialsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Hero(
-        tag: HeroTags.financials.value,
-        child: Material(
-          color: AppColors.backgroundCanvas,
-          child: BlocProvider(
-            create: (context) => FinancialsCubit()
-              ..getOfficers()
-              ..getCapital(),
-            child: BlocConsumer<FinancialsCubit, FinancialsState>(
+    return BlocProvider(
+      create: (context) => FinancialsCubit()
+        ..getOfficers()
+        ..getCapital(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
+        body: BlocConsumer<FinancialsCubit, FinancialsState>(
               listener: (context, state) {
                 if (state.status == FinancialsStatus.addMoneyLoading) {
                   showDialog(
@@ -297,9 +294,7 @@ class FinancialsScreen extends StatelessWidget {
               },
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   void _onAddMoneySubmit(BuildContext context, FinancialsState state) {

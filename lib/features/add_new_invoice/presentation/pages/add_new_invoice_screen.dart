@@ -15,19 +15,15 @@ class AddNewInvoiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Hero(
-        tag: HeroTags.addNewInvoice.value,
-        child: BlocProvider(
-          create: (context) => AddNewInvoiceCubit(),
-          child: Material(
-            color:  AppColors.backgroundCanvas
-            ,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CustomAppBar(title: 'فاتورة جديدة'),
-                SizedBox(height: 10.h),
+    return BlocProvider(
+      create: (context) => AddNewInvoiceCubit(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const CustomAppBar(title: 'فاتورة جديدة'),
+            SizedBox(height: 10.h),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: EdgeInsets.only(
@@ -781,8 +777,6 @@ class AddNewInvoiceScreen extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

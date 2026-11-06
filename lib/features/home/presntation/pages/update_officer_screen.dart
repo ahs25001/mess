@@ -17,16 +17,13 @@ class UpdateOfficerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Hero(
-        tag: HeroTags.updateOfficerScreen.value,
-        child: Material(
-          color: AppColors.backgroundCanvas,
-          child: BlocProvider(
-            create: (context) => HomeCubit()..getOfficers(),
-            child: Column(
-              children: [
-                const CustomAppBar(title: 'تعديل بيانات الضابط'),
+    return BlocProvider(
+      create: (context) => HomeCubit()..getOfficers(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundCanvas,
+        body: Column(
+          children: [
+            const CustomAppBar(title: 'تعديل بيانات الضابط'),
                 BlocConsumer<HomeCubit, HomeState>(
                   listener: (context, state) {
                     if (state.status == HomeStatus.updateOfficerLoading ||
@@ -548,8 +545,6 @@ class UpdateOfficerScreen extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

@@ -15,19 +15,16 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Hero(
-        tag: HeroTags.listOfCategoriesForOfficersScreen.value,
-        child: Material(
-          child: BlocProvider(
-            create: (context) => HomeCubit()..getOfficers(),
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                return Column(
-                  children: [
-                    Material(
-                        color: AppColors.backgroundCanvas,
-                        child: const CustomAppBar(title: 'بيان اصناف للضباط')),
+    return BlocProvider(
+      create: (context) => HomeCubit()..getOfficers(),
+      child: Scaffold(
+        backgroundColor: AppColors.cardBackground,
+        body: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            print(state.officerItems?.map((e) => e?.date).toList());
+            return Column(
+              children: [
+                    const CustomAppBar(title: 'بيان اصناف للضباط'),
                     Expanded(
                       child: Column(
                         children: [
@@ -36,7 +33,7 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
                             child: CustomDropdown<OfficerModel?>(
                               headerBuilder: (context, selectedItem, enabled) =>
                                   Text(
-                                    selectedItem?.name ?? '',
+                                    '${selectedItem?.rank} ${selectedItem?.name}',
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontWeight: FontWeight.bold,
@@ -58,7 +55,7 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
                               listItemBuilder:
                                   (context, item, isSelected, onItemSelect) =>
                                       Text(
-                                        item?.name ?? '',
+                                         '${item?.rank} ${item?.name}',
                                         style: TextStyle(
                                           color: AppColors.primary,
                                           fontWeight: FontWeight.bold,
@@ -159,15 +156,32 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
                               : Expanded(
                                   child: ListView.builder(
                                     padding: EdgeInsets.zero,
-                                    itemCount: state.food?.length ?? 0,
-                                    itemBuilder: (context, index) => FadeInUp(
+                                    itemCount: state.officerItems?.length ?? 0,
+                                    itemBuilder: (context, index)
+                                    {
+                                      var quantity =(state
+                                      .officerItems?[index]
+                                        ?.quantity??0)/(state.officerItems![index]!.officersIds.length);
+                                      var priceOfItem =  ((state
+                                          .officerItems?[index]
+                                          ?.totalPrice ??
+                                          0) /
+                                          (state
+                                              .officerItems?[index]
+                                              ?.quantity ??
+                                              1))/(state.officerItems![index]!.officersIds.length);
+                                      var totalPrice =   priceOfItem*quantity
+                                      ;
+                                      return FadeInUp(
                                       key: ValueKey(
-                                        'row_${index}_${state.food?[index]?.id}_${state.food?[index]?.name}',
+                                        'row_${index}_${state.food?[index]
+                                            ?.id}_${state.food?[index]?.name}',
                                       ),
-                                      duration: const Duration(milliseconds: 300),
+                                      duration: const Duration(
+                                          milliseconds: 300),
                                       child: Container(
                                         margin: EdgeInsets.symmetric(
-                                          horizontal: 20.w,
+                                          horizontal: 10.w,
                                         ),
                                         height: 35.h,
                                         decoration: BoxDecoration(
@@ -175,16 +189,16 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
                                               ? AppColors.borderColor
                                               : AppColors.cardBackground,
                                           borderRadius:
-                                              (index ==
-                                                  (state.food?.length ?? 0) - 1)
+                                          (index ==
+                                              (state.food?.length ?? 0) - 1)
                                               ? BorderRadius.only(
-                                                  bottomLeft: Radius.circular(
-                                                    7.r,
-                                                  ),
-                                                  bottomRight: Radius.circular(
-                                                    7.r,
-                                                  ),
-                                                )
+                                            bottomLeft: Radius.circular(
+                                              7.r,
+                                            ),
+                                            bottomRight: Radius.circular(
+                                              7.r,
+                                            ),
+                                          )
                                               : null,
                                           border: Border.all(
                                             color: AppColors.borderColor,
@@ -197,8 +211,8 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
                                               child: Center(
                                                 child: Text(
                                                   state
-                                                          .officerItems?[index]
-                                                          ?.name ??
+                                                      .officerItems?[index]
+                                                      ?.name ??
                                                       "",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
@@ -210,58 +224,48 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                state
-                                                        .officerItems?[index]
-                                                        ?.quantity
-                                                        .toString() ??
-                                                    '',
-                                                style: TextStyle(fontSize: 14.sp),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Text(
-                                                ((state
-                                                                .officerItems?[index]
-                                                                ?.totalPrice ??
-                                                            0) /
-                                                        (state
-                                                                .officerItems?[index]
-                                                                ?.quantity ??
-                                                            1))
+                                                quantity
                                                     .toString(),
-                                                style: TextStyle(fontSize: 14.sp),
+                                                style: TextStyle(
+                                                    fontSize: 14.sp),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                state
-                                                        .officerItems?[index]
-                                                        ?.totalPrice
-                                                        .toString() ??
-                                                    '',
-                                                style: TextStyle(fontSize: 14.sp),
+                                               priceOfItem
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 14.sp),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                state.officerItems?[index]?.date
-                                                        .toString()
-                                                        .substring(0, 10) ??
+                                              totalPrice.toString() ,
+                                                style: TextStyle(
+                                                    fontSize: 14.sp),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                state.officerItems?[index]?.date.toDate()
+                                                    .toString()
+                                                    .substring(0, 10) ??
                                                     '',
-                                                style: TextStyle(fontSize: 14.sp),
+                                                style: TextStyle(
+                                                    fontSize: 14.sp),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ),
+                                    );},
                                   ),
                                 ),
                         ],
@@ -272,8 +276,6 @@ class ListOfCategoriesForOfficersScreen extends StatelessWidget {
               },
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

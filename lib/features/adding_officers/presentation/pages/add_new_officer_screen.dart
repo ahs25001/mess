@@ -65,14 +65,10 @@ class AddNewOfficerScreen extends StatelessWidget {
           builder: (context, state) {
             return Form(
               key: context.read<AddNewOfficerCubit>().formKey,
-              child: Hero(
-                tag: HeroTags.addNewOfficer.value,
-                child: Material(
-                  color: AppColors.cardBackground,
-                  child: Column(
-                    children: [
-                      const CustomAppBar(title: "إضافة ضابط جديد"),
-                      Expanded(
+              child: Column(
+                children: [
+                  const CustomAppBar(title: "إضافة ضابط جديد"),
+                  Expanded(
                         child: SingleChildScrollView(
                           padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: Column(
@@ -237,12 +233,8 @@ class AddNewOfficerScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-              ),
-            );
+                );
           },
-        ),
-      ),
-    );
+        )));
   }
 }
