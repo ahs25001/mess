@@ -3,6 +3,7 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mess_app/core/widgets/custom_empty_list_widget.dart';
 import '../../../../core/models/food_model.dart';
 import '../../../../core/models/officer_model.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -107,7 +108,17 @@ class ComboMealTab extends StatelessWidget {
                   ],
                 ),
               ),
-              ...items.asMap().entries.map((entry) {
+              if (items.isEmpty)
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: CustomEmptyListWidget(
+                    message: "لم يتم إضافة أصناف للوجبة بعد",
+                    height: 90.h,
+                    width: 90.w,
+                  ),
+                )
+              else
+                ...items.asMap().entries.map((entry) {
                 final index = entry.key;
                 final e = entry.value;
                 return FadeInUp(
@@ -358,7 +369,17 @@ class ComboMealTab extends StatelessWidget {
                   ],
                 ),
               ),
-              ...officers.asMap().entries.map((entry) {
+              if (officers.isEmpty)
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: CustomEmptyListWidget(
+                    message: "لم يتم اختيار ضباط بعد",
+                    height: 90.h,
+                    width: 90.w,
+                  ),
+                )
+              else
+                ...officers.asMap().entries.map((entry) {
                 final index = entry.key;
                 final e = entry.value;
                 return FadeInUp(

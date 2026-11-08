@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -67,6 +68,8 @@ class CustomAppBar extends StatelessWidget {
           ],
         ),
       ),
+    ).fadeInDown(
+      duration: Duration(milliseconds: 300)
     );
   }
 }

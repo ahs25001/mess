@@ -11,12 +11,10 @@ class DashboardCard extends StatelessWidget {
   final String subtitle;
   final Color iconColor;
   final VoidCallback onTap;
-  final String heroTag;
   const DashboardCard({
     super.key,
     required this.iconPath,
     required this.onTap,
-    required this.heroTag,
     required this.backgroundColor,
     required this.title,
     required this.subtitle,
@@ -29,9 +27,7 @@ class DashboardCard extends StatelessWidget {
       onTap: () {
         onTap();
       },
-      child: Hero(
-        tag: heroTag,
-        child: Material(
+      child:  Material(
           child: Card(
 
             color: backgroundColor,
@@ -63,7 +59,7 @@ class DashboardCard extends StatelessWidget {
             ),
           ),
         ),
-      ),
+
     );
   }
 }

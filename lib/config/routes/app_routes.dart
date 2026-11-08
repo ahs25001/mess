@@ -8,6 +8,7 @@ import '../../features/closing_out_the_months/presentation/pages/closing_out_the
 import '../../features/dispensing_items/presentation/pages/dispensing_items_screen.dart';
 import '../../features/financials/presntation/pages/financials_screen.dart';
 import '../../features/financials/presntation/pages/month_end_closing_screen.dart';
+import '../../features/home/presntation/pages/about_us_screen.dart';
 import '../../features/home/presntation/pages/home_screen.dart';
 import '../../features/home/presntation/pages/inventory_of_items_screen.dart';
 import '../../features/home/presntation/pages/list_of_categories_for_officers_screen.dart';
@@ -26,6 +27,7 @@ class AppRoutes {
   static const String invoiceDetails = '/invoice_details';
   static const String monthEndClosing = '/month_end_closing';
   static const String closingOutTheMonths = '/closing_out_the_months';
+  static const String aboutUs='/about us';
   static const String closingOutTheMonthsDetails =
       '/closingOutTheMonthsDetails';
   static const String updateOfficerScreen = '/update_officer_screen';
@@ -88,6 +90,10 @@ class Routes {
         return MaterialPageRoute(
           builder: (context) => const ListOfCategoriesForOfficersScreen(),
         );
+        case AppRoutes.aboutUs:
+          return MaterialPageRoute(
+            builder: (context) => const AboutUsScreen(),
+          );
       default:
         return MaterialPageRoute(builder: (context) => const ErrorScreen());
     }
