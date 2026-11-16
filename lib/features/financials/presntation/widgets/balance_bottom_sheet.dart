@@ -2,19 +2,33 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/models/officer_model.dart';
+import 'package:mess_app/core/widgets/custom_empty_list_widget.dart';
 import '../../../../core/utils/app_colors.dart';
+
 class BalanceBottomSheet extends StatelessWidget {
-  final List<OfficerModel>?officers;
+  final List<OfficerModel>? officers;
   final num capital;
-  const BalanceBottomSheet({super.key,required this.officers,required this.capital});
+  const BalanceBottomSheet({
+    super.key,
+    required this.officers,
+    required this.capital,
+  });
+
   @override
   Widget build(BuildContext context) {
+    if ((officers ?? []).isEmpty) {
+      return const CustomEmptyListWidget(
+        message: "لا يوجد ضباط",
+        subtitle: "لم يتم تسجيل أي ضباط بعد",
+      );
+    }
+
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       children: [
         // Table Header
         Container(
-          padding: EdgeInsets.symmetric(vertical:8.h,horizontal: 2.w),
+          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 2.w),
           decoration: BoxDecoration(
             color: AppColors.borderColor,
             borderRadius: BorderRadius.only(
@@ -78,7 +92,7 @@ class BalanceBottomSheet extends StatelessWidget {
           ),
         ),
         // Table Animated Rows
-        ...(officers??[]).asMap().entries.map((entry) {
+        ...(officers ?? []).asMap().entries.map((entry) {
           final index = entry.key;
           final e = entry.value;
           return FadeInUp(
@@ -89,22 +103,22 @@ class BalanceBottomSheet extends StatelessWidget {
               milliseconds: 300,
             ),
             child: Container(
-              padding: EdgeInsets.symmetric(vertical:8.h,horizontal: 2.w),
+              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 2.w),
               decoration: BoxDecoration(
                 color: (index % 2 != 0)
                     ? AppColors.borderColor
                     : AppColors.cardBackground,
                 borderRadius:
-                (index == officers!.length - 1)
-                    ? BorderRadius.only(
-                  bottomLeft: Radius.circular(
-                    7.r,
-                  ),
-                  bottomRight: Radius.circular(
-                    7.r,
-                  ),
-                )
-                    : null,
+                    (index == officers!.length - 1)
+                        ? BorderRadius.only(
+                            bottomLeft: Radius.circular(
+                              7.r,
+                            ),
+                            bottomRight: Radius.circular(
+                              7.r,
+                            ),
+                          )
+                        : null,
                 border: Border.all(
                   color: AppColors.borderColor,
                   width: 1.w,
@@ -116,7 +130,7 @@ class BalanceBottomSheet extends StatelessWidget {
                     flex: 2,
                     child: Center(
                       child: Text(
-                        '${e.rank} ${e.name}' ,
+                        '${e.rank} ${e.name}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14.sp,
@@ -143,7 +157,8 @@ class BalanceBottomSheet extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                  ),   Expanded(
+                  ),
+                  Expanded(
                     flex: 1,
                     child: Text(
                       "${(e.consumer).ceil()}",
@@ -153,13 +168,11 @@ class BalanceBottomSheet extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-
                 ],
               ),
             ),
           );
         }),
-
       ],
     );
   }

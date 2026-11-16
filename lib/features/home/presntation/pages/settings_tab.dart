@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/config/routes/app_routes.dart';
+import 'package:mess_app/core/utils/app_enums.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_list_tile.dart';
 import '../cubit/home_cubit.dart';
@@ -83,6 +84,19 @@ class SettingsTab extends StatelessWidget {
                   ),
                 );
               },
+            ),
+          ),
+          FloatingActionButton(
+            heroTag: HeroTags.aboutUs.value,
+            backgroundColor: AppColors.backgroundCanvas,
+            shape: CircleBorder(side: BorderSide(color: AppColors.primary)),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.aboutUs);
+            },
+            child: Icon(
+              Icons.question_mark,
+              color: AppColors.primary,
+              size: 30.sp,
             ),
           ),
         ],

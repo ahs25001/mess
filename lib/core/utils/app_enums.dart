@@ -1,14 +1,5 @@
 enum HeroTags {
-  addNewInvoice("add_new_invoice"),
-  addNewOfficer("addNewOfficer"),
-  financials("financials"),
-  invoices("invoices"),
-  disburse("disburse"),
-  inventoryOfItems("inventoryOfItems"),
-  monthEndClosing("monthEndClosing"),
-  closingOutTheMonths("closingOutTheMonths"),
-  updateOfficerScreen("updateOfficerScreen"),
-  listOfCategoriesForOfficersScreen("listOfCategoriesForOfficersScreen");
+ aboutUs('aboutUs');
 
   final String value;
   const HeroTags(this.value);

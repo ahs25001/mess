@@ -3,6 +3,7 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mess_app/core/widgets/custom_empty_list_widget.dart';
 import '../../../../core/models/food_model.dart';
 import '../../../../core/models/officer_model.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -288,7 +289,17 @@ class DispensingItemsTab extends StatelessWidget {
                           ],
                         ),
                       ),
-                      ...items.asMap().entries.map((entry) {
+                      if (items.isEmpty)
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20.h),
+                          child: CustomEmptyListWidget(
+                            message: "لم يتم إضافة أصناف للصرف بعد",
+                            height: 100.h,
+                            width: 100.w,
+                          ),
+                        )
+                      else
+                        ...items.asMap().entries.map((entry) {
                         final index = entry.key;
                         final e = entry.value;
                         return FadeInUp(

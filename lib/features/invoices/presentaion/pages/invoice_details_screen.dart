@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mess_app/core/widgets/custom_app_bar.dart';
+import 'package:mess_app/core/widgets/custom_empty_list_widget.dart';
 
 import '../../../../core/models/invoice_model.dart';
 import '../../../../core/utils/app_colors.dart';
@@ -12,6 +13,7 @@ class InvoiceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final items = invoice?.items ?? [];
     return Scaffold(
       body: Column(
         children: [
@@ -81,89 +83,84 @@ class InvoiceDetailsScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: invoice?.items.length ?? 0,
-              itemBuilder: (context, index) => FadeInUp(
-                key: ValueKey(
-                  'row_${index}_${invoice?.id}_${invoice?.representativeName}',
-                ),
-                duration: const Duration(milliseconds: 300),
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.w),
-                  height: 35.h,
-                  decoration: BoxDecoration(
-                    color: (index % 2 != 0)
-                        ? AppColors.borderColor
-                        : AppColors.cardBackground,
-                    borderRadius: (index == (invoice?.items.length ?? 0) - 1)
-                        ? BorderRadius.only(
-                            bottomLeft: Radius.circular(7.r),
-                            bottomRight: Radius.circular(7.r),
-                          )
-                        : null,
-                    border: Border.all(
-                      color: AppColors.borderColor,
-                      width: 1.w,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            invoice?.items[index].food?.name ?? "",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 14.sp),
+            child: items.isEmpty
+                ? const CustomEmptyListWidget(
+                    message: "لا توجد أصناف في هذه الفاتورة",
+                  )
+                : ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: items.length,
+                    itemBuilder: (context, index) => FadeInUp(
+                      key: ValueKey(
+                        'row_${index}_${invoice?.id}_${invoice?.representativeName}',
+                      ),
+                      duration: const Duration(milliseconds: 300),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20.w),
+                        height: 35.h,
+                        decoration: BoxDecoration(
+                          color: (index % 2 != 0)
+                              ? AppColors.borderColor
+                              : AppColors.cardBackground,
+                          borderRadius: (index == items.length - 1)
+                              ? BorderRadius.only(
+                                  bottomLeft: Radius.circular(7.r),
+                                  bottomRight: Radius.circular(7.r),
+                                )
+                              : null,
+                          border: Border.all(
+                            color: AppColors.borderColor,
+                            width: 1.w,
                           ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          invoice?.items[index].quantity.toString() ?? '',
-                          style: TextStyle(fontSize: 14.sp),
-                          textAlign: TextAlign.center,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  items[index].food?.name ?? "",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 14.sp),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                items[index].quantity.toString(),
+                                style: TextStyle(fontSize: 14.sp),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                items[index].price.ceil().toString(),
+                                style: TextStyle(fontSize: 14.sp),
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                (items[index].food?.isFixedMiscellaneousExpenses ?? false)
+                                    ? 'نثريات ثابتة'
+                                    : (items[index].food?.isVariableMiscellaneousExpenses ?? false)
+                                    ? 'نثريات متغيرة'
+                                    : ((items[index].price) / (items[index].quantity == 0 ? 1 : items[index].quantity))
+                                          .toString(),
+                                style: TextStyle(fontSize: 14.sp),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                textDirection: TextDirection.ltr,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          invoice?.items[index].price.ceil().toString() ?? '0',
-                          style: TextStyle(fontSize: 14.sp),
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          (invoice
-                                      ?.items[index]
-                                      .food
-                                      ?.isFixedMiscellaneousExpenses ??
-                                  false)
-                              ? 'نثريات ثابتة'
-                              : (invoice
-                                        ?.items[index]
-                                        .food
-                                        ?.isVariableMiscellaneousExpenses ??
-                                    false)
-                              ? 'نثريات متغيرة'
-                              : ((invoice?.items[index].price ?? 0) /
-                                        (invoice?.items[index].quantity ?? 1))
-                                    .toString(),
-                          style: TextStyle(fontSize: 14.sp),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          textDirection: TextDirection.ltr,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
           Container(
             color: AppColors.primary,

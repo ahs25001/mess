@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_enums.dart';
-import '../widgets/curved_header.dart';
 import '../widgets/dashboard_card.dart';
 
 class HomeTab extends StatelessWidget {
@@ -25,7 +23,6 @@ class HomeTab extends StatelessWidget {
             ),
             children: [
               DashboardCard(
-                heroTag: HeroTags.addNewInvoice.value,
                 onTap: () {
                   Navigator.pushNamed(context, AppRoutes.addNewInvoice);
                 },
@@ -36,7 +33,6 @@ class HomeTab extends StatelessWidget {
                 iconColor: AppColors.invoiceAccent,
               ).slideInRight(),
               DashboardCard(
-                heroTag: HeroTags.addNewOfficer.value,
                 onTap: () {
                   Navigator.pushNamed(context, AppRoutes.addNewOfficer);
                 },
@@ -47,7 +43,6 @@ class HomeTab extends StatelessWidget {
                 iconColor: AppColors.primary,
               ).slideInLeft(),
               DashboardCard(
-                heroTag: HeroTags.financials.value,
                 onTap: () {
                   Navigator.pushNamed(context, AppRoutes.financials);
                 },
@@ -58,7 +53,6 @@ class HomeTab extends StatelessWidget {
                 iconColor: AppColors.financialsIconAccent,
               ).slideInRight(),
               DashboardCard(
-                heroTag: HeroTags.disburse.value,
                 onTap: () {
                   Navigator.pushNamed(context, AppRoutes.dispensingItems);
                 },
