@@ -48,6 +48,12 @@ enum HomeStatus {
   getCapitalLoading,
   getCapitalSuccess,
   getCapitalFailure,
+  exportDatabaseLoading,
+  exportDatabaseSuccess,
+  exportDatabaseFailure,
+  importDatabaseLoading,
+  importDatabaseSuccess,
+  importDatabaseFailure,
 }
 
 enum AddNewInvoiceStatus {

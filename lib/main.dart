@@ -14,7 +14,6 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ScreenUtil.ensureScreenSize();
-  // 3598 6/11
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
