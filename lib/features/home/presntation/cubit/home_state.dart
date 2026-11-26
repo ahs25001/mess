@@ -11,6 +11,8 @@ class HomeState {
   bool? isOfficerActive;
   num?capital;
   List<DispensingItemsModel?>? officerItems;
+  double? progress;
+
   HomeState({
     this.status,
     this.currentIndex,
@@ -22,6 +24,7 @@ class HomeState {
     this.selectedRank,
     this.officerItems,
     this.food,
+    this.progress,
   });
   HomeState copyWith({
     HomeStatus? status,
@@ -34,6 +37,7 @@ class HomeState {
     List<DispensingItemsModel>?officerItems,
     int? currentIndex,
     List<FoodModel?>? food,
+    double? progress,
   }) => HomeState(
     status: status ?? this.status,
     officerItems: officerItems ?? this.officerItems,
@@ -45,9 +49,11 @@ class HomeState {
     capital: capital ?? this.capital,
     errorMessage: errorMessage ?? this.errorMessage,
     currentIndex: currentIndex ?? this.currentIndex,
+    progress: progress ?? this.progress,
   );
 }
 
 final class HomeInitial extends HomeState {
-  HomeInitial() : super(status: HomeStatus.init, currentIndex: 0);
+  HomeInitial() : super(status: HomeStatus.init, currentIndex: 0, progress: 0.0);
 }
+
